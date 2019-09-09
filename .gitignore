@@ -1,0 +1,24 @@
+#ignore kicad backup files
+*.bak
+*.sch-bak
+*.log
+*.kicad_pcb-bak
+#ignore ltspice log files
+simulation/*.log
+simulation/*.plt
+simulation/*.raw
+simulation/*.net
+#matlab backup files
+*.m~
+#osx files
+*.DS_Store
+#for firmware
+*.tmp
+firmware/.Xil/
+#simulation
+/firmware/sim/results.xml
+/firmware/sim/*.pyc
+/firmware/sim/waveform.vcd
+/firmware/sim/waves.pkl
+/firmware/sim/sim_build/
+/firmware/sim/build/
