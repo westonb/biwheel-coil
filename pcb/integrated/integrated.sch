@@ -112,4 +112,35 @@ F 3 "~" H 5300 2950 50  0001 C CNN
 	1    5300 2950
 	1    0    0    -1  
 $EndComp
+$Comp
+L wbraun_ic_lib:mounting-hole-grounded J1005
+U 1 1 5D8938B4
+P 7900 2100
+F 0 "J1005" H 8178 2047 60  0000 L CNN
+F 1 "mounting-hole-grounded" H 8178 1941 60  0000 L CNN
+F 2 "wbraun_smd:M3-tight-fit-pan-head" H 7900 2100 60  0001 C CNN
+F 3 "" H 7900 2100 60  0001 C CNN
+	1    7900 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L wbraun_ic_lib:mounting-hole-grounded J1006
+U 1 1 5D8938BA
+P 8550 2100
+F 0 "J1006" H 8828 2047 60  0000 L CNN
+F 1 "mounting-hole-grounded" H 8828 1941 60  0000 L CNN
+F 2 "wbraun_smd:M3-tight-fit-pan-head" H 8550 2100 60  0001 C CNN
+F 3 "" H 8550 2100 60  0001 C CNN
+	1    8550 2100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8550 2750 8550 2550
+Wire Wire Line
+	7900 2550 7900 2750
+Connection ~ 7900 2750
+Wire Wire Line
+	7900 2750 8550 2750
+Wire Wire Line
+	7250 2750 7900 2750
 $EndSCHEMATC

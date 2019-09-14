@@ -739,7 +739,7 @@ Wire Wire Line
 	5150 6650 5050 6650
 Wire Wire Line
 	5150 7150 5050 7150
-Text Label 5050 7150 2    50   ~ 0
+Text Label 5050 6650 2    50   ~ 0
 ADC1_A
 $Comp
 L Device:R R5003
@@ -820,7 +820,7 @@ Wire Wire Line
 Connection ~ 1750 2350
 Text Label 2100 2350 0    50   ~ 0
 ADC1_B
-Text Label 5050 6650 2    50   ~ 0
+Text Label 5050 7150 2    50   ~ 0
 ADC1_B
 Wire Wire Line
 	6050 6850 6200 6850
