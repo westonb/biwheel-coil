@@ -1,4 +1,4 @@
-16409535395563886
+16414280760568886
 Battery
 BatteryHolder_Bulgin_BX0036_1xC
 Bulgin Battery Holder, BX0036, Battery Type C (https://www.bulgin.com/products/pub/media/bulgin/data/Battery_holders.pdf)
@@ -72205,7 +72205,21 @@ wbraun_smd
 2
 2
 wbraun_smd
+2222SQ-161
+
+
+0
+2
+2
+wbraun_smd
 2929SQ
+
+
+0
+2
+2
+wbraun_smd
+2929SQ-501
 
 
 0
@@ -72729,6 +72743,13 @@ OLED_128x64_Display
 0
 4
 4
+wbraun_smd
+OMNI-UNI-30-50-D
+
+
+0
+2
+1
 wbraun_smd
 OSCILLATOR_5.0X3.2
 

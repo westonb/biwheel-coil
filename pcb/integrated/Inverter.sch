@@ -71,7 +71,7 @@ $Sheet
 S 1000 3600 800  500 
 U 5D640666
 F0 "Gate Drive 2" 50
-F1 "GateDrive.sch" 50
+F1 "GateDrive_alt.sch" 50
 F2 "Gate" I R 1800 3750 50 
 F3 "Source" I R 1800 3950 50 
 F4 "In" I L 1000 3850 50 
@@ -517,4 +517,6 @@ Text GLabel 1650 1050 0    50   Input ~ 0
 TEMP_A
 Text GLabel 1650 1450 0    50   Input ~ 0
 TEMP_B
+Text GLabel 5350 1150 0    50   Input ~ 0
+VBUS
 $EndSCHEMATC
