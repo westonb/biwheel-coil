@@ -286,83 +286,40 @@ F 3 "~" H 7850 3150 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:R R10005
-U 1 1 5D8CBCDF
-P 7850 3550
-F 0 "R10005" H 7920 3596 50  0000 L CNN
-F 1 "R" H 7920 3505 50  0000 L CNN
-F 2 "Resistor_SMD:R_0805_2012Metric" V 7780 3550 50  0001 C CNN
-F 3 "~" H 7850 3550 50  0001 C CNN
-	1    7850 3550
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R R10006
-U 1 1 5D8CBD1D
-P 7850 3950
-F 0 "R10006" H 7920 3996 50  0000 L CNN
-F 1 "R" H 7920 3905 50  0000 L CNN
-F 2 "Resistor_SMD:R_0805_2012Metric" V 7780 3950 50  0001 C CNN
-F 3 "~" H 7850 3950 50  0001 C CNN
-	1    7850 3950
-	1    0    0    -1  
-$EndComp
-$Comp
 L Device:R R10007
 U 1 1 5D8CBD59
-P 7850 4450
-F 0 "R10007" H 7920 4496 50  0000 L CNN
-F 1 "R" H 7920 4405 50  0000 L CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 7780 4450 50  0001 C CNN
-F 3 "~" H 7850 4450 50  0001 C CNN
-	1    7850 4450
+P 7850 3750
+F 0 "R10007" H 7920 3796 50  0000 L CNN
+F 1 "R" H 7920 3705 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 7780 3750 50  0001 C CNN
+F 3 "~" H 7850 3750 50  0001 C CNN
+	1    7850 3750
 	1    0    0    -1  
 $EndComp
-$Comp
-L Device:R R10008
-U 1 1 5D8CBD9B
-P 8300 4200
-F 0 "R10008" V 8507 4200 50  0000 C CNN
-F 1 "R" V 8416 4200 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 8230 4200 50  0001 C CNN
-F 3 "~" H 8300 4200 50  0001 C CNN
-	1    8300 4200
-	0    -1   -1   0   
-$EndComp
+Connection ~ 7850 3500
 Wire Wire Line
-	7850 4100 7850 4200
-Wire Wire Line
-	7850 4200 8150 4200
-Connection ~ 7850 4200
-Wire Wire Line
-	7850 4200 7850 4300
+	7850 3500 7850 3600
 Wire Wire Line
 	7850 2100 7850 2200
 Wire Wire Line
 	7850 2500 7850 2600
 Wire Wire Line
 	7850 2900 7850 3000
-Wire Wire Line
-	7850 3300 7850 3400
-Wire Wire Line
-	7850 3700 7850 3800
 $Comp
 L power:GNDPWR #PWR010004
 U 1 1 5D8D0EF1
-P 7850 4850
-F 0 "#PWR010004" H 7850 4650 50  0001 C CNN
-F 1 "GNDPWR" H 7854 4696 50  0000 C CNN
-F 2 "" H 7850 4800 50  0001 C CNN
-F 3 "" H 7850 4800 50  0001 C CNN
-	1    7850 4850
+P 7850 4150
+F 0 "#PWR010004" H 7850 3950 50  0001 C CNN
+F 1 "GNDPWR" H 7854 3996 50  0000 C CNN
+F 2 "" H 7850 4100 50  0001 C CNN
+F 3 "" H 7850 4100 50  0001 C CNN
+	1    7850 4150
 	1    0    0    -1  
 $EndComp
 Text Label 7850 1700 0    50   ~ 0
 VBUS
 Wire Wire Line
 	7850 1700 7850 1800
-Wire Wire Line
-	8450 4200 8600 4200
 $Comp
 L Device:C C10005
 U 1 1 5D652A7B
@@ -405,20 +362,6 @@ Wire Wire Line
 Connection ~ 3600 1750
 $Comp
 L Device:C C?
-U 1 1 5D747C8C
-P 5800 1350
-AR Path="/5D33C751/5D747C8C" Ref="C?"  Part="1" 
-AR Path="/5D688380/5D747C8C" Ref="C?"  Part="1" 
-AR Path="/5D68A538/5D747C8C" Ref="C10006"  Part="1" 
-F 0 "C10006" H 5915 1396 50  0000 L CNN
-F 1 "33n" H 5915 1305 50  0000 L CNN
-F 2 "Capacitor_THT:C_Rect_L18.0mm_W7.0mm_P15.00mm_FKS3_FKP3" H 5838 1200 50  0001 C CNN
-F 3 "~" H 5800 1350 50  0001 C CNN
-	1    5800 1350
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:C C?
 U 1 1 5D747C93
 P 5800 1800
 AR Path="/5D33C751/5D747C93" Ref="C?"  Part="1" 
@@ -432,14 +375,9 @@ F 3 "~" H 5800 1800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	5800 1150 5800 1200
-Wire Wire Line
-	5800 1500 5800 1550
-Wire Wire Line
 	5800 1550 5600 1550
 Wire Wire Line
 	5600 1550 5600 1650
-Connection ~ 5800 1550
 Wire Wire Line
 	5800 1550 5800 1650
 $Comp
@@ -459,8 +397,6 @@ Wire Wire Line
 	4950 1300 5350 1300
 Wire Wire Line
 	5350 1300 5350 1150
-Wire Wire Line
-	5350 1150 5800 1150
 Connection ~ 4950 1300
 Wire Wire Line
 	4950 1750 5350 1750
@@ -471,52 +407,68 @@ Wire Wire Line
 Wire Wire Line
 	5800 2000 5800 1950
 Connection ~ 4950 1750
-$Comp
-L Connector:Conn_01x02_Female J10001
-U 1 1 5D780C25
-P 5350 4050
-F 0 "J10001" H 5377 4026 50  0000 L CNN
-F 1 "Conn_01x02_Female" H 5377 3935 50  0000 L CNN
-F 2 "wbraun_smd:Anderson_PP45_2x1" H 5350 4050 50  0001 C CNN
-F 3 "~" H 5350 4050 50  0001 C CNN
-	1    5350 4050
-	1    0    0    1   
-$EndComp
-Wire Wire Line
-	2750 3450 3000 3450
 Text Label 3050 3450 0    50   ~ 0
 Out1
 Text Label 2850 5500 0    50   ~ 0
 Out2
-Text GLabel 3050 3250 2    50   Input ~ 0
-SW_NODE
-Wire Wire Line
-	3050 3250 3000 3250
-Wire Wire Line
-	3000 3250 3000 3450
-Connection ~ 3000 3450
-Wire Wire Line
-	3000 3450 3050 3450
-Text Label 5050 3950 2    50   ~ 0
-Out1
-Text Label 5050 4050 2    50   ~ 0
-Out2
-Wire Wire Line
-	5050 3950 5150 3950
-Wire Wire Line
-	5050 4050 5150 4050
-Text GLabel 8600 4200 2    50   Input ~ 0
+Text GLabel 8300 3500 2    50   Input ~ 0
 VBUS_SENSE
 Wire Wire Line
-	7850 4600 7850 4850
+	7850 3900 7850 4150
 Wire Wire Line
 	1750 1050 1650 1050
 Wire Wire Line
 	1750 1450 1650 1450
-Text GLabel 1650 1050 0    50   Input ~ 0
-TEMP_A
 Text GLabel 1650 1450 0    50   Input ~ 0
 TEMP_B
 Text GLabel 5350 1150 0    50   Input ~ 0
 VBUS
+$Comp
+L Connector:Conn_01x01_Female J10001
+U 1 1 5DD3543B
+P 5100 3650
+F 0 "J10001" H 5128 3676 50  0000 L CNN
+F 1 "Conn_01x01_Female" H 5128 3585 50  0000 L CNN
+F 2 "wbraun_smd:7693-term" H 5100 3650 50  0001 C CNN
+F 3 "~" H 5100 3650 50  0001 C CNN
+	1    5100 3650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x01_Female J10002
+U 1 1 5DD3590B
+P 5100 4000
+F 0 "J10002" H 5128 4026 50  0000 L CNN
+F 1 "Conn_01x01_Female" H 5128 3935 50  0000 L CNN
+F 2 "wbraun_smd:7693-term" H 5100 4000 50  0001 C CNN
+F 3 "~" H 5100 4000 50  0001 C CNN
+	1    5100 4000
+	1    0    0    -1  
+$EndComp
+Text Label 4900 3650 2    50   ~ 0
+Out1
+Text Label 4900 4000 2    50   ~ 0
+Out2
+Wire Wire Line
+	2750 3450 3050 3450
+Wire Wire Line
+	7850 3300 7850 3500
+Wire Wire Line
+	7850 3500 8300 3500
+$Comp
+L power:GND #PWR0148
+U 1 1 5DDE3636
+P 1650 1050
+F 0 "#PWR0148" H 1650 800 50  0001 C CNN
+F 1 "GND" H 1655 877 50  0000 C CNN
+F 2 "" H 1650 1050 50  0001 C CNN
+F 3 "" H 1650 1050 50  0001 C CNN
+	1    1650 1050
+	1    0    0    -1  
+$EndComp
+Text GLabel 1500 1050 0    50   Input ~ 0
+GND
+Wire Wire Line
+	1500 1050 1650 1050
+Connection ~ 1650 1050
 $EndSCHEMATC

@@ -33,17 +33,6 @@ F 3 "" H -300 4500 50  0001 C CNN
 $EndComp
 Text Notes 650  6050 0    50   ~ 0
 Configuration Info in UG470, Table 2-4\nSchematic Figure 2-12\n
-$Comp
-L power:GND #PWR03001
-U 1 1 5C05B0BC
-P 2550 5900
-F 0 "#PWR03001" H 2550 5650 50  0001 C CNN
-F 1 "GND" H 2555 5727 50  0000 C CNN
-F 2 "" H 2550 5900 50  0001 C CNN
-F 3 "" H 2550 5900 50  0001 C CNN
-	1    2550 5900
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	2450 2950 2600 2950
 Wire Wire Line
@@ -613,25 +602,25 @@ Wire Wire Line
 	5300 5650 5400 5650
 Wire Wire Line
 	5300 5450 5400 5450
-Text GLabel 5400 5650 2    50   Input ~ 0
+Text GLabel 5400 3550 2    50   Input ~ 0
 ADC_D9
-Text GLabel 5400 5450 2    50   Input ~ 0
+Text GLabel 5400 3650 2    50   Input ~ 0
 ADC_D8
-Text GLabel 5400 5150 2    50   Input ~ 0
+Text GLabel 5400 2550 2    50   Input ~ 0
 ADC_D7
-Text GLabel 5400 5250 2    50   Input ~ 0
+Text GLabel 5400 2650 2    50   Input ~ 0
 ADC_D6
-Text GLabel 5400 4950 2    50   Input ~ 0
+Text GLabel 5400 2750 2    50   Input ~ 0
 ADC_D5
-Text GLabel 5400 3750 2    50   Input ~ 0
+Text GLabel 5400 2150 2    50   Input ~ 0
 ADC_D4
-Text GLabel 5400 5050 2    50   Input ~ 0
+Text GLabel 5400 2850 2    50   Input ~ 0
 ADC_D3
-Text GLabel 5400 4050 2    50   Input ~ 0
+Text GLabel 5400 2250 2    50   Input ~ 0
 ADC_D2
-Text GLabel 5400 3850 2    50   Input ~ 0
+Text GLabel 5400 2950 2    50   Input ~ 0
 ADC_D1
-Text GLabel 5400 4450 2    50   Input ~ 0
+Text GLabel 5400 2450 2    50   Input ~ 0
 ADC_D0
 Wire Wire Line
 	5300 3750 5400 3750
@@ -670,7 +659,7 @@ U 1 1 5C4A2C76
 P 10500 1550
 F 0 "D3002" V 10538 1433 50  0000 R CNN
 F 1 "LED" V 10447 1433 50  0000 R CNN
-F 2 "wbraun_smd:LED-T1-RIGHT-ANGLE_4.6x4.4mm" H 10500 1550 50  0001 C CNN
+F 2 "LED_SMD:LED_0805_2012Metric" H 10500 1550 50  0001 C CNN
 F 3 "~" H 10500 1550 50  0001 C CNN
 	1    10500 1550
 	0    -1   -1   0   
@@ -731,7 +720,7 @@ U 1 1 5C4C1D60
 P 10000 1550
 F 0 "D3001" V 10038 1433 50  0000 R CNN
 F 1 "LED" V 9947 1433 50  0000 R CNN
-F 2 "wbraun_smd:LED-T1-RIGHT-ANGLE_4.6x4.4mm" H 10000 1550 50  0001 C CNN
+F 2 "LED_SMD:LED_0805_2012Metric" H 10000 1550 50  0001 C CNN
 F 3 "~" H 10000 1550 50  0001 C CNN
 	1    10000 1550
 	0    -1   -1   0   
@@ -764,19 +753,19 @@ F 3 "~" H 9400 1900 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	5300 1850 5400 1850
-Text GLabel 5400 1850 2    50   Input ~ 0
+Text GLabel 4950 -4100 2    50   Input ~ 0
 GATE_1
 Wire Wire Line
 	5300 2950 5400 2950
-Text GLabel 5400 2950 2    50   Input ~ 0
+Text GLabel 4950 -3000 2    50   Input ~ 0
 GATE_2
 Wire Wire Line
 	5300 2650 5400 2650
-Text GLabel 5400 2650 2    50   Input ~ 0
+Text GLabel 5850 -1350 2    50   Input ~ 0
 GATE_3
 Wire Wire Line
 	5300 3650 5400 3650
-Text GLabel 5400 3650 2    50   Input ~ 0
+Text GLabel 4950 -2300 2    50   Input ~ 0
 GATE_4
 Wire Wire Line
 	8000 4850 8100 4850
@@ -784,9 +773,9 @@ Wire Wire Line
 	8000 3050 8100 3050
 Wire Wire Line
 	8000 1850 8100 1850
-Text GLabel 8100 1850 2    50   Input ~ 0
+Text GLabel 6750 -3700 2    50   Input ~ 0
 FIBER_TX
-Text GLabel 8100 3050 2    50   Input ~ 0
+Text GLabel 6750 -2500 2    50   Input ~ 0
 FIBER_RX
 Wire Wire Line
 	8000 4650 8100 4650
@@ -819,39 +808,39 @@ Text Label 9100 2000 2    50   ~ 0
 DEBUG_RX
 Wire Wire Line
 	5300 3550 5400 3550
-Text GLabel 5400 4650 2    50   Input ~ 0
+Text GLabel 5200 -800 2    50   Input ~ 0
 ZCS_DETECT
 Wire Wire Line
 	8000 5050 8100 5050
-Text GLabel 8100 5050 2    50   Input ~ 0
+Text GLabel 5400 1850 2    50   Input ~ 0
 ADC_CSB
 Wire Wire Line
 	8000 4750 8100 4750
-Text GLabel 8100 4750 2    50   Input ~ 0
+Text GLabel 5400 3050 2    50   Input ~ 0
 ADC_SCLK
-Text GLabel 8100 4850 2    50   Input ~ 0
+Text GLabel 5400 2350 2    50   Input ~ 0
 ADC_SDIO
-Text GLabel 8100 4650 2    50   Input ~ 0
+Text GLabel 5400 4450 2    50   Input ~ 0
 ADC_MODE
 Wire Wire Line
 	5300 4650 5400 4650
-Text GLabel 5400 3550 2    50   Input ~ 0
+Text GLabel 4950 -2400 2    50   Input ~ 0
 UVLO
 Wire Wire Line
 	5300 3450 5400 3450
-Text Label 5400 3450 0    50   ~ 0
+Text Label 4950 -2500 0    50   ~ 0
 DEBUG_RX
 Wire Wire Line
 	5300 2550 5400 2550
-Text Label 5400 2550 0    50   ~ 0
+Text Label 4950 -3400 0    50   ~ 0
 DEBUG_TX
 Wire Wire Line
 	5300 4350 5400 4350
-Text Label 5400 4350 0    50   ~ 0
+Text Label 4950 -1600 0    50   ~ 0
 LED1
 Wire Wire Line
 	5300 4250 5400 4250
-Text Label 5400 4250 0    50   ~ 0
+Text Label 4950 -1700 0    50   ~ 0
 LED2
 $Comp
 L Device:R R3009
@@ -891,90 +880,8 @@ Wire Wire Line
 	10400 3650 10400 3550
 Wire Wire Line
 	10100 3550 10250 3550
-$Comp
-L Device:Ferrite_Bead_Small FB3002
-U 1 1 5D870ADB
-P 2550 5700
-F 0 "FB3002" V 2350 5700 50  0000 C CNN
-F 1 "FB" V 2700 5750 50  0000 C CNN
-F 2 "Inductor_SMD:L_0805_2012Metric" V 2480 5700 50  0001 C CNN
-F 3 "~" H 2550 5700 50  0001 C CNN
-	1    2550 5700
-	-1   0    0    1   
-$EndComp
-$Comp
-L Device:Ferrite_Bead_Small FB3001
-U 1 1 5D877083
-P 2550 4900
-F 0 "FB3001" V 2313 4900 50  0000 C CNN
-F 1 "FB" V 2700 4900 50  0000 C CNN
-F 2 "Inductor_SMD:L_0805_2012Metric" V 2480 4900 50  0001 C CNN
-F 3 "~" H 2550 4900 50  0001 C CNN
-	1    2550 4900
-	-1   0    0    1   
-$EndComp
-$Comp
-L Device:C C3001
-U 1 1 5D8773FD
-P 2550 5300
-F 0 "C3001" H 2665 5346 50  0000 L CNN
-F 1 "0.47u" H 2665 5255 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0402_1005Metric" H 2588 5150 50  0001 C CNN
-F 3 "~" H 2550 5300 50  0001 C CNN
-	1    2550 5300
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:C C3002
-U 1 1 5D877505
-P 2950 5300
-F 0 "C3002" H 3065 5346 50  0000 L CNN
-F 1 "0.47u" H 3065 5255 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0402_1005Metric" H 2988 5150 50  0001 C CNN
-F 3 "~" H 2950 5300 50  0001 C CNN
-	1    2950 5300
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	2550 5000 2550 5100
-Wire Wire Line
-	2550 5100 2950 5100
-Wire Wire Line
-	2950 5100 2950 5150
-Connection ~ 2550 5100
-Wire Wire Line
-	2550 5100 2550 5150
-Wire Wire Line
-	2550 5450 2550 5500
-Wire Wire Line
-	2550 5500 2950 5500
-Wire Wire Line
-	2950 5500 2950 5450
-Wire Wire Line
-	2550 5500 2550 5600
-Connection ~ 2550 5500
-Wire Wire Line
-	2550 4800 2550 4700
-Wire Wire Line
-	2550 5800 2550 5900
-Wire Wire Line
-	2950 5100 2950 5000
-Connection ~ 2950 5100
-Wire Wire Line
-	2950 5500 2950 5600
-Connection ~ 2950 5500
-Text Label 2950 5600 0    50   ~ 0
-GNDA
-Text Label 2950 5000 0    50   ~ 0
-VDDA
-Text Label 2550 3450 0    50   ~ 0
-GNDA
-Text Label 2550 3350 0    50   ~ 0
-VDDA
 Wire Wire Line
 	2450 3350 2550 3350
-Wire Wire Line
-	2450 3450 2550 3450
 $Comp
 L power:GND #PWR03003
 U 1 1 5D8C31CB
@@ -988,8 +895,6 @@ F 3 "" H 2800 3250 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	2450 3250 2800 3250
-Text Label 2600 3050 0    50   ~ 0
-GNDA
 $Comp
 L power:GND #PWR03002
 U 1 1 5D8CAB96
@@ -1120,17 +1025,6 @@ F 3 "" H 9100 1700 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:+1V8 #PWR0163
-U 1 1 5D7E8C3A
-P 2550 4700
-F 0 "#PWR0163" H 2550 4550 50  0001 C CNN
-F 1 "+1V8" H 2565 4873 50  0000 C CNN
-F 2 "" H 2550 4700 50  0001 C CNN
-F 3 "" H 2550 4700 50  0001 C CNN
-	1    2550 4700
-	1    0    0    -1  
-$EndComp
-$Comp
 L power:+3V3 #PWR0164
 U 1 1 5D7E9482
 P 2950 1950
@@ -1141,4 +1035,113 @@ F 3 "" H 2950 1950 50  0001 C CNN
 	1    2950 1950
 	0    1    1    0   
 $EndComp
+$Comp
+L power:GND #PWR0163
+U 1 1 5DE28CC2
+P 2600 3050
+F 0 "#PWR0163" H 2600 2800 50  0001 C CNN
+F 1 "GND" V 2605 2922 50  0000 R CNN
+F 2 "" H 2600 3050 50  0001 C CNN
+F 3 "" H 2600 3050 50  0001 C CNN
+	1    2600 3050
+	0    -1   -1   0   
+$EndComp
+Connection ~ 2600 3050
+$Comp
+L power:+1V8 #PWR0194
+U 1 1 5DE2A2AA
+P 2600 4900
+F 0 "#PWR0194" H 2600 4750 50  0001 C CNN
+F 1 "+1V8" V 2615 5028 50  0000 L CNN
+F 2 "" H 2600 4900 50  0001 C CNN
+F 3 "" H 2600 4900 50  0001 C CNN
+	1    2600 4900
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	2450 3450 2900 3450
+$Comp
+L power:GND #PWR0195
+U 1 1 5DF37C1F
+P 2550 5400
+F 0 "#PWR0195" H 2550 5150 50  0001 C CNN
+F 1 "GND" V 2555 5272 50  0000 R CNN
+F 2 "" H 2550 5400 50  0001 C CNN
+F 3 "" H 2550 5400 50  0001 C CNN
+	1    2550 5400
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2600 4900 2700 4900
+Wire Wire Line
+	2550 5400 2650 5400
+Wire Wire Line
+	2850 5400 2950 5400
+Wire Wire Line
+	2950 5400 2950 5300
+Wire Wire Line
+	2900 4900 2950 4900
+Wire Wire Line
+	2950 4900 2950 5000
+Wire Wire Line
+	2950 4900 3050 4900
+Connection ~ 2950 4900
+Wire Wire Line
+	2950 5400 3050 5400
+Connection ~ 2950 5400
+Text Label 3050 4900 0    50   ~ 0
+VCCADC
+Text Label 3050 5400 0    50   ~ 0
+GNDADC
+$Comp
+L Device:C C3001
+U 1 1 5DF382D1
+P 2950 5150
+F 0 "C3001" H 3065 5196 50  0000 L CNN
+F 1 "0.47u" H 3065 5105 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 2988 5000 50  0001 C CNN
+F 3 "~" H 2950 5150 50  0001 C CNN
+	1    2950 5150
+	1    0    0    -1  
+$EndComp
+Text Label 2550 3350 0    50   ~ 0
+VCCADC
+Text Label 2900 3450 0    50   ~ 0
+GNDADC
+$Comp
+L Device:Ferrite_Bead_Small FB3002
+U 1 1 5DF353BA
+P 2800 4900
+F 0 "FB3002" V 2563 4900 50  0000 C CNN
+F 1 "Ferrite_Bead_Small" V 2654 4900 50  0000 C CNN
+F 2 "Inductor_SMD:L_0402_1005Metric" V 2730 4900 50  0001 C CNN
+F 3 "~" H 2800 4900 50  0001 C CNN
+	1    2800 4900
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:Ferrite_Bead_Small FB3001
+U 1 1 5DF719D1
+P 2750 5400
+F 0 "FB3001" V 2513 5400 50  0000 C CNN
+F 1 "Ferrite_Bead_Small" V 2604 5400 50  0000 C CNN
+F 2 "Inductor_SMD:L_0402_1005Metric" V 2680 5400 50  0001 C CNN
+F 3 "~" H 2750 5400 50  0001 C CNN
+	1    2750 5400
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5300 2750 5400 2750
+Wire Wire Line
+	5300 2150 5400 2150
+Wire Wire Line
+	5300 2850 5400 2850
+Wire Wire Line
+	5300 2250 5400 2250
+Wire Wire Line
+	5300 2450 5400 2450
+Wire Wire Line
+	5300 2350 5400 2350
+Wire Wire Line
+	5300 3050 5400 3050
 $EndSCHEMATC

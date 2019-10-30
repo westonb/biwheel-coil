@@ -555,52 +555,22 @@ F 3 "~" H 3150 1250 50  0001 C CNN
 	1    3150 1250
 	1    0    0    -1  
 $EndComp
-$Comp
-L Device:C C9003
-U 1 1 5D6FA237
-P 3550 3750
-F 0 "C9003" H 3665 3796 50  0000 L CNN
-F 1 "10u" H 3665 3705 50  0000 L CNN
-F 2 "Capacitor_SMD:C_1206_3216Metric" H 3588 3600 50  0001 C CNN
-F 3 "~" H 3550 3750 50  0001 C CNN
-	1    3550 3750
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:C C9002
-U 1 1 5D6FA2D9
-P 3400 2550
-F 0 "C9002" H 3515 2596 50  0000 L CNN
-F 1 "10u" H 3515 2505 50  0000 L CNN
-F 2 "Capacitor_SMD:C_1206_3216Metric" H 3438 2400 50  0001 C CNN
-F 3 "~" H 3400 2550 50  0001 C CNN
-	1    3400 2550
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	3200 4050 3550 4050
 Wire Wire Line
-	3550 4050 3550 3900
-Wire Wire Line
 	3200 3450 3550 3450
 Wire Wire Line
-	3550 3450 3550 3600
-Wire Wire Line
 	3550 4050 3550 4150
-Connection ~ 3550 4050
 Wire Wire Line
 	3550 3450 3550 3350
-Connection ~ 3550 3450
 Wire Wire Line
 	3150 2700 3400 2700
 Wire Wire Line
 	3150 2400 3400 2400
 Wire Wire Line
 	3400 2400 3400 2300
-Connection ~ 3400 2400
 Wire Wire Line
 	3400 2700 3400 2800
-Connection ~ 3400 2700
 $Comp
 L power:GND #PWR09003
 U 1 1 5D72347B

@@ -1011,48 +1011,6 @@ F 3 "" H 4400 2800 50  0001 C CNN
 	1    4400 2800
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	8600 5900 8600 5850
-Connection ~ 8100 5900
-Wire Wire Line
-	8100 5900 8600 5900
-Wire Wire Line
-	8600 5500 8600 5550
-Connection ~ 8100 5500
-Wire Wire Line
-	8100 5500 8600 5500
-Wire Wire Line
-	8600 4800 8600 4750
-Connection ~ 8100 4800
-Wire Wire Line
-	8100 4800 8600 4800
-Wire Wire Line
-	8600 4400 8600 4450
-Connection ~ 8100 4400
-Wire Wire Line
-	8100 4400 8600 4400
-$Comp
-L Device:C C4020
-U 1 1 5C6484C1
-P 8600 4600
-F 0 "C4020" H 8715 4646 50  0000 L CNN
-F 1 "0.47u" H 8715 4555 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0402_1005Metric" H 8638 4450 50  0001 C CNN
-F 3 "~" H 8600 4600 50  0001 C CNN
-	1    8600 4600
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:C C4021
-U 1 1 5C6486F5
-P 8600 5700
-F 0 "C4021" H 8715 5746 50  0000 L CNN
-F 1 "0.47u" H 8715 5655 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0402_1005Metric" H 8638 5550 50  0001 C CNN
-F 3 "~" H 8600 5700 50  0001 C CNN
-	1    8600 5700
-	1    0    0    -1  
-$EndComp
 $Comp
 L power:+1V8 #PWR0165
 U 1 1 5D7FCDEC
@@ -1141,4 +1099,25 @@ F 3 "" H 9300 2900 50  0001 C CNN
 	1    9300 2900
 	1    0    0    -1  
 $EndComp
+$Comp
+L Device:C C4026
+U 1 1 5DE33B48
+P 8500 3450
+F 0 "C4026" H 8615 3496 50  0000 L CNN
+F 1 "0.47u" H 8615 3405 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 8538 3300 50  0001 C CNN
+F 3 "~" H 8500 3450 50  0001 C CNN
+	1    8500 3450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8000 3250 8500 3250
+Wire Wire Line
+	8500 3250 8500 3300
+Connection ~ 8000 3250
+Wire Wire Line
+	8000 3650 8500 3650
+Wire Wire Line
+	8500 3650 8500 3600
+Connection ~ 8000 3650
 $EndSCHEMATC
