@@ -57,7 +57,7 @@ U 1 1 5C598F19
 P 5050 2450
 F 0 "FB7001" V 4776 2450 50  0000 C CNN
 F 1 "Ferrite_Bead" V 4867 2450 50  0000 C CNN
-F 2 "Inductor_SMD:L_0805_2012Metric" V 4980 2450 50  0001 C CNN
+F 2 "Inductor_SMD:L_0402_1005Metric" V 4980 2450 50  0001 C CNN
 F 3 "~" H 5050 2450 50  0001 C CNN
 	1    5050 2450
 	0    1    1    0   
@@ -181,17 +181,6 @@ F 2 "Capacitor_SMD:C_0402_1005Metric" H 4138 3850 50  0001 C CNN
 F 3 "~" H 4100 4000 50  0001 C CNN
 	1    4100 4000
 	1    0    0    -1  
-$EndComp
-$Comp
-L Device:Ferrite_Bead FB7002
-U 1 1 5C606F0D
-P 5050 3750
-F 0 "FB7002" V 4776 3750 50  0000 C CNN
-F 1 "Ferrite_Bead" V 4867 3750 50  0000 C CNN
-F 2 "Inductor_SMD:L_0805_2012Metric" V 4980 3750 50  0001 C CNN
-F 3 "~" H 5050 3750 50  0001 C CNN
-	1    5050 3750
-	0    1    1    0   
 $EndComp
 $Comp
 L Device:C C7004
@@ -324,5 +313,16 @@ F 2 "" H 5500 3650 50  0001 C CNN
 F 3 "" H 5500 3650 50  0001 C CNN
 	1    5500 3650
 	1    0    0    -1  
+$EndComp
+$Comp
+L Device:Ferrite_Bead FB7002
+U 1 1 5C606F0D
+P 5050 3750
+F 0 "FB7002" V 4776 3750 50  0000 C CNN
+F 1 "Ferrite_Bead" V 4867 3750 50  0000 C CNN
+F 2 "Inductor_SMD:L_0402_1005Metric" V 4980 3750 50  0001 C CNN
+F 3 "~" H 5050 3750 50  0001 C CNN
+	1    5050 3750
+	0    1    1    0   
 $EndComp
 $EndSCHEMATC

@@ -28,19 +28,6 @@ F 3 "~" H 2450 2300 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector:Conn_01x02_Female J?
-U 1 1 5D688D73
-P 950 2200
-AR Path="/5D33C751/5D688D73" Ref="J?"  Part="1" 
-AR Path="/5D688380/5D688D73" Ref="J8001"  Part="1" 
-F 0 "J8001" H 844 1875 50  0000 C CNN
-F 1 "Conn_01x02_Female" H 844 1966 50  0000 C CNN
-F 2 "wbraun_smd:Anderson_PP45_2x1" H 950 2200 50  0001 C CNN
-F 3 "~" H 950 2200 50  0001 C CNN
-	1    950  2200
-	-1   0    0    1   
-$EndComp
-$Comp
 L Device:Fuse F?
 U 1 1 5D688D7A
 P 1550 2100
@@ -89,10 +76,6 @@ F 3 "" H 5100 3000 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	5100 2650 5100 3050
-Wire Wire Line
-	1150 2200 1250 2200
-Wire Wire Line
-	1250 2200 1250 2300
 Text GLabel 2600 5800 0    50   Input ~ 0
 SUPPLY_EN1
 $Comp
@@ -256,10 +239,6 @@ Wire Wire Line
 Connection ~ 4400 2750
 Wire Wire Line
 	1700 2100 2450 2100
-Wire Wire Line
-	1250 2300 1950 2300
-Wire Wire Line
-	1950 2300 1950 2950
 Text GLabel 6150 3200 3    50   Input ~ 0
 IL_ZERO
 Text GLabel 6050 3200 3    50   Input ~ 0
@@ -917,6 +896,36 @@ F 1 "+5V" V 6765 3778 50  0000 L CNN
 F 2 "" H 6750 3650 50  0001 C CNN
 F 3 "" H 6750 3650 50  0001 C CNN
 	1    6750 3650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x03_Female J8001
+U 1 1 5DBE4336
+P 950 2200
+F 0 "J8001" H 842 2485 50  0000 C CNN
+F 1 "Conn_01x03_Female" H 842 2394 50  0000 C CNN
+F 2 "wbraun_smd:Terminal-block-plug_3x1_5mm-pitch" H 950 2200 50  0001 C CNN
+F 3 "~" H 950 2200 50  0001 C CNN
+	1    950  2200
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	1150 2200 1950 2200
+Wire Wire Line
+	1950 2200 1950 2950
+Wire Wire Line
+	1150 2300 1150 2500
+$Comp
+L power:Earth #PWR?
+U 1 1 5DBEA1A2
+P 1150 2500
+AR Path="/5DBEA1A2" Ref="#PWR?"  Part="1" 
+AR Path="/5D688380/5DBEA1A2" Ref="#PWR0129"  Part="1" 
+F 0 "#PWR0129" H 1150 2250 50  0001 C CNN
+F 1 "Earth" H 1150 2350 50  0001 C CNN
+F 2 "" H 1150 2500 50  0001 C CNN
+F 3 "~" H 1150 2500 50  0001 C CNN
+	1    1150 2500
 	1    0    0    -1  
 $EndComp
 $EndSCHEMATC
