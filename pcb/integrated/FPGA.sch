@@ -753,29 +753,21 @@ F 3 "~" H 9400 1900 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	5300 1850 5400 1850
-Text GLabel 4950 -4100 2    50   Input ~ 0
-GATE_1
 Wire Wire Line
 	5300 2950 5400 2950
-Text GLabel 4950 -3000 2    50   Input ~ 0
-GATE_2
 Wire Wire Line
 	5300 2650 5400 2650
-Text GLabel 5850 -1350 2    50   Input ~ 0
-GATE_3
 Wire Wire Line
 	5300 3650 5400 3650
-Text GLabel 4950 -2300 2    50   Input ~ 0
-GATE_4
 Wire Wire Line
 	8000 4850 8100 4850
 Wire Wire Line
 	8000 3050 8100 3050
 Wire Wire Line
 	8000 1850 8100 1850
-Text GLabel 6750 -3700 2    50   Input ~ 0
+Text GLabel 8100 4750 2    50   Input ~ 0
 FIBER_TX
-Text GLabel 6750 -2500 2    50   Input ~ 0
+Text GLabel 8100 4950 2    50   Input ~ 0
 FIBER_RX
 Wire Wire Line
 	8000 4650 8100 4650
@@ -808,7 +800,7 @@ Text Label 9100 2000 2    50   ~ 0
 DEBUG_RX
 Wire Wire Line
 	5300 3550 5400 3550
-Text GLabel 5200 -800 2    50   Input ~ 0
+Text GLabel 5400 3850 2    50   Input ~ 0
 ZCS_DETECT
 Wire Wire Line
 	8000 5050 8100 5050
@@ -836,11 +828,11 @@ Text Label 4950 -3400 0    50   ~ 0
 DEBUG_TX
 Wire Wire Line
 	5300 4350 5400 4350
-Text Label 4950 -1600 0    50   ~ 0
+Text Label 8100 5050 0    50   ~ 0
 LED1
 Wire Wire Line
 	5300 4250 5400 4250
-Text Label 4950 -1700 0    50   ~ 0
+Text Label 8100 5650 0    50   ~ 0
 LED2
 $Comp
 L Device:R R3009
@@ -1144,4 +1136,24 @@ Wire Wire Line
 	5300 2350 5400 2350
 Wire Wire Line
 	5300 3050 5400 3050
+Wire Wire Line
+	8000 1750 8100 1750
+Text GLabel 8100 1750 2    50   Input ~ 0
+GATE4
+Wire Wire Line
+	8000 1450 8100 1450
+Text GLabel 8100 1450 2    50   Input ~ 0
+GATE3
+Wire Wire Line
+	8000 1350 8100 1350
+Text GLabel 8100 1350 2    50   Input ~ 0
+GATE1
+Wire Wire Line
+	8000 1250 8100 1250
+Text GLabel 8100 1250 2    50   Input ~ 0
+GATE2
+Wire Wire Line
+	8000 5650 8100 5650
+Wire Wire Line
+	8000 4950 8100 4950
 $EndSCHEMATC

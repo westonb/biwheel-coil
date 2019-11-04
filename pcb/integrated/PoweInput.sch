@@ -177,7 +177,7 @@ Wire Wire Line
 	4400 2750 4400 2500
 Wire Wire Line
 	9700 3900 9700 4150
-Text GLabel 2450 1950 1    50   Input ~ 0
+Text GLabel 5100 1950 1    50   Input ~ 0
 VIN
 $Comp
 L Device:D D8001
@@ -228,7 +228,7 @@ F 3 "" H 7450 3000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	2450 1950 2450 2100
+	5100 1950 5100 2100
 Connection ~ 2450 2100
 Wire Wire Line
 	4400 2750 4700 2750
@@ -424,7 +424,7 @@ AR Path="/5D68A538/5D640682/5DC0C4E7" Ref="R?"  Part="1"
 AR Path="/5D688380/5DC0C4E7" Ref="R8004"  Part="1" 
 F 0 "R8004" H 2950 5950 50  0000 R CNN
 F 1 "4.7K" H 3000 6050 50  0000 R CNN
-F 2 "Resistor_SMD:R_0402_1005Metric" V 2680 6000 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 2680 6000 50  0001 C CNN
 F 3 "~" H 2750 6000 50  0001 C CNN
 	1    2750 6000
 	-1   0    0    1   
@@ -928,4 +928,6 @@ F 3 "~" H 1150 2500 50  0001 C CNN
 	1    1150 2500
 	1    0    0    -1  
 $EndComp
+Text GLabel 2450 2100 1    50   Input ~ 0
+VLINK
 $EndSCHEMATC

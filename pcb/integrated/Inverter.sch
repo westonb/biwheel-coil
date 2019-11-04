@@ -471,4 +471,20 @@ GND
 Wire Wire Line
 	1500 1050 1650 1050
 Connection ~ 1650 1050
+Text GLabel 900  3100 0    50   Input ~ 0
+GATE1
+Text GLabel 900  3850 0    50   Input ~ 0
+GATE2
+Text GLabel 1000 5250 0    50   Input ~ 0
+GATE3
+Text GLabel 1000 6000 0    50   Input ~ 0
+GATE4
+Wire Wire Line
+	900  3100 1000 3100
+Wire Wire Line
+	900  3850 1000 3850
+Wire Wire Line
+	1000 5250 1100 5250
+Wire Wire Line
+	1000 6000 1100 6000
 $EndSCHEMATC
