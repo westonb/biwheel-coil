@@ -643,7 +643,7 @@ Wire Wire Line
 Wire Wire Line
 	1750 3450 2150 3450
 Text GLabel 2800 1000 0    50   Input ~ 0
-VIN
+VLINK
 $Comp
 L power:GNDPWR #PWR0103
 U 1 1 5D777608
@@ -1002,10 +1002,6 @@ Wire Wire Line
 Wire Wire Line
 	3650 1500 3650 1400
 Connection ~ 3150 1500
-Text GLabel 2000 2400 0    50   Input ~ 0
-VIN
-Text GLabel 1750 3450 0    50   Input ~ 0
-VIN
 $Comp
 L power:GND #PWR0177
 U 1 1 5D86F000
@@ -1093,4 +1089,8 @@ Wire Wire Line
 Connection ~ 4700 2800
 Wire Wire Line
 	4700 2800 4200 2800
+Text GLabel 2000 2400 0    50   Input ~ 0
+VLINK
+Text GLabel 1750 3450 0    50   Input ~ 0
+VLINK
 $EndSCHEMATC

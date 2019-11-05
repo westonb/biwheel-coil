@@ -416,8 +416,6 @@ VBUS_SENSE
 Wire Wire Line
 	7850 3900 7850 4150
 Wire Wire Line
-	1750 1050 1650 1050
-Wire Wire Line
 	1750 1450 1650 1450
 Text GLabel 1650 1450 0    50   Input ~ 0
 TEMP_B
@@ -455,22 +453,6 @@ Wire Wire Line
 	7850 3300 7850 3500
 Wire Wire Line
 	7850 3500 8300 3500
-$Comp
-L power:GND #PWR0148
-U 1 1 5DDE3636
-P 1650 1050
-F 0 "#PWR0148" H 1650 800 50  0001 C CNN
-F 1 "GND" H 1655 877 50  0000 C CNN
-F 2 "" H 1650 1050 50  0001 C CNN
-F 3 "" H 1650 1050 50  0001 C CNN
-	1    1650 1050
-	1    0    0    -1  
-$EndComp
-Text GLabel 1500 1050 0    50   Input ~ 0
-GND
-Wire Wire Line
-	1500 1050 1650 1050
-Connection ~ 1650 1050
 Text GLabel 900  3100 0    50   Input ~ 0
 GATE1
 Text GLabel 900  3850 0    50   Input ~ 0
@@ -487,4 +469,8 @@ Wire Wire Line
 	1000 5250 1100 5250
 Wire Wire Line
 	1000 6000 1100 6000
+Wire Wire Line
+	1500 1050 1750 1050
+Text GLabel 1500 1050 0    50   Input ~ 0
+TEMP_A
 $EndSCHEMATC

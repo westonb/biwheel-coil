@@ -1085,7 +1085,6 @@ Wire Wire Line
 	8800 5050 9300 5050
 Wire Wire Line
 	9300 5050 9300 4950
-Connection ~ 8800 5050
 Wire Wire Line
 	9300 5050 9300 5450
 Wire Wire Line
@@ -1167,11 +1166,11 @@ F 3 "" H 1500 3750 50  0001 C CNN
 	1    1500 3750
 	1    0    0    -1  
 $EndComp
-Text GLabel 8800 2400 2    50   Input ~ 0
+Text GLabel 9150 2400 2    50   Input ~ 0
 XADC1_P
 Wire Wire Line
 	8500 2400 8800 2400
-Text GLabel 6000 2400 0    50   Input ~ 0
+Text GLabel 6100 2900 0    50   Input ~ 0
 VIN_SENSE
 $Comp
 L Device:C C5010
@@ -1205,7 +1204,7 @@ Wire Wire Line
 Wire Wire Line
 	7050 2900 7600 2900
 Connection ~ 7050 2900
-Text GLabel 6100 2900 0    50   Input ~ 0
+Text GLabel 6000 2400 0    50   Input ~ 0
 VBUS_SENSE
 $Comp
 L power:GND #PWR0152
@@ -1264,9 +1263,94 @@ Wire Wire Line
 Wire Wire Line
 	6750 2400 7050 2400
 Wire Wire Line
-	7650 5050 8800 5050
-Wire Wire Line
 	8250 1150 8250 1300
 Wire Wire Line
 	10500 4550 10500 4700
+$Comp
+L Device:R R5024
+U 1 1 5DD2E6C4
+P 8050 4700
+F 0 "R5024" V 7843 4700 50  0000 C CNN
+F 1 "33" V 7934 4700 50  0000 C CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 7980 4700 50  0001 C CNN
+F 3 "~" H 8050 4700 50  0001 C CNN
+	1    8050 4700
+	0    1    1    0   
+$EndComp
+Text GLabel 7650 4700 0    50   Input ~ 0
+TEMP_A
+$Comp
+L power:GND #PWR0136
+U 1 1 5DD2F9F0
+P 8350 4600
+F 0 "#PWR0136" H 8350 4350 50  0001 C CNN
+F 1 "GND" H 8355 4427 50  0000 C CNN
+F 2 "" H 8350 4600 50  0001 C CNN
+F 3 "" H 8350 4600 50  0001 C CNN
+	1    8350 4600
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	7650 4700 7900 4700
+Wire Wire Line
+	8200 4700 8350 4700
+Wire Wire Line
+	8350 4700 8350 4600
+$Comp
+L Device:R R5025
+U 1 1 5DD397B5
+P 8050 5050
+F 0 "R5025" V 7843 5050 50  0000 C CNN
+F 1 "33" V 7934 5050 50  0000 C CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 7980 5050 50  0001 C CNN
+F 3 "~" H 8050 5050 50  0001 C CNN
+	1    8050 5050
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	7650 5050 7900 5050
+Wire Wire Line
+	8200 5050 8800 5050
+Connection ~ 8800 5050
+$Comp
+L Device:R R5027
+U 1 1 5DD500FB
+P 8950 2400
+F 0 "R5027" V 8743 2400 50  0000 C CNN
+F 1 "33" V 8834 2400 50  0000 C CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 8880 2400 50  0001 C CNN
+F 3 "~" H 8950 2400 50  0001 C CNN
+	1    8950 2400
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R5026
+U 1 1 5DD507F4
+P 8950 1950
+F 0 "R5026" V 8743 1950 50  0000 C CNN
+F 1 "33" V 8834 1950 50  0000 C CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 8880 1950 50  0001 C CNN
+F 3 "~" H 8950 1950 50  0001 C CNN
+	1    8950 1950
+	0    1    1    0   
+$EndComp
+Text GLabel 9200 1950 2    50   Input ~ 0
+XADC1_N
+Wire Wire Line
+	9100 1950 9200 1950
+Wire Wire Line
+	9100 2400 9150 2400
+$Comp
+L power:GND #PWR0144
+U 1 1 5DD5AEA8
+P 8750 1950
+F 0 "#PWR0144" H 8750 1700 50  0001 C CNN
+F 1 "GND" H 8755 1777 50  0000 C CNN
+F 2 "" H 8750 1950 50  0001 C CNN
+F 3 "" H 8750 1950 50  0001 C CNN
+	1    8750 1950
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	8800 1950 8750 1950
 $EndSCHEMATC

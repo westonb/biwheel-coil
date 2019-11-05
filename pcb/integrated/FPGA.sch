@@ -820,11 +820,11 @@ Text GLabel 4950 -2400 2    50   Input ~ 0
 UVLO
 Wire Wire Line
 	5300 3450 5400 3450
-Text Label 4950 -2500 0    50   ~ 0
+Text Label 5400 5050 0    50   ~ 0
 DEBUG_RX
 Wire Wire Line
 	5300 2550 5400 2550
-Text Label 4950 -3400 0    50   ~ 0
+Text Label 5400 4950 0    50   ~ 0
 DEBUG_TX
 Wire Wire Line
 	5300 4350 5400 4350
@@ -1156,4 +1156,12 @@ Wire Wire Line
 	8000 5650 8100 5650
 Wire Wire Line
 	8000 4950 8100 4950
+Text GLabel 8100 1150 2    50   Input ~ 0
+BOOST_SW
+Wire Wire Line
+	8000 1150 8100 1150
+Wire Wire Line
+	8000 1650 8100 1650
+Text GLabel 8100 1650 2    50   Input ~ 0
+CHARGE_SW
 $EndSCHEMATC
