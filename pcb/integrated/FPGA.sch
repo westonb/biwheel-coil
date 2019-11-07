@@ -816,8 +816,6 @@ Text GLabel 5400 4450 2    50   Input ~ 0
 ADC_MODE
 Wire Wire Line
 	5300 4650 5400 4650
-Text GLabel 4950 -2400 2    50   Input ~ 0
-UVLO
 Wire Wire Line
 	5300 3450 5400 3450
 Text Label 5400 5050 0    50   ~ 0
@@ -1164,4 +1162,14 @@ Wire Wire Line
 	8000 1650 8100 1650
 Text GLabel 8100 1650 2    50   Input ~ 0
 CHARGE_SW
+Text GLabel 5400 4350 2    50   Input ~ 0
+ADC1_MUX_EN
+Wire Wire Line
+	5300 1650 5400 1650
+Text GLabel 5400 1650 2    50   Input ~ 0
+ADC2_MUX_EN
+Text GLabel 5400 1550 2    50   Input ~ 0
+OVER_TEMP
+Wire Wire Line
+	5300 1550 5400 1550
 $EndSCHEMATC
