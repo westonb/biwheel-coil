@@ -35,6 +35,18 @@ set_property IOSTANDARD LVCMOS33 [get_ports ADC_SDIO]
 set_property PACKAGE_PIN B14 [get_ports ADC_CS]
 set_property IOSTANDARD LVCMOS33 [get_ports ADC_CS]
 
+#ADC_MUX
+set_property PACKAGE_PIN J13 [get_ports ADC_MUX]
+set_property IOSTANDARD LVCMOS33 [get_ports ADC_MUX]
+
+#XADC input pins
+set_property PACKAGE_PIN G8 [get_ports VP_0]
+set_property PACKAGE_PIN H7 [get_ports VN_0]
+
+#XADC mux 
+set_property PACKAGE_PIN A13 [get_ports XADC_MUX]
+set_property IOSTANDARD LVCMOS33 [get_ports XADC_MUX]
+
 #debug / status 
 set_property PACKAGE_PIN P3 [get_ports LED1]
 set_property IOSTANDARD LVCMOS33 [get_ports LED1]

@@ -5,16 +5,23 @@ module controller_top(
 	//ADC data bus
 	input wire [9:0] ADC_DATA,
 	input wire ADC_DCO,
+	//XADC Input pins
+	input wire VP_0, 
+	input wire VN_0,
+	//XADC mux, 
+	output wire XADC_MUX,
 	//ADC configuration interface
 	output wire ADC_SCLK, 
 	output wire ADC_SDIO,
 	output wire ADC_CS,
 	output wire ADC_MODE,
+	//ADC mux
+	output wire ADC_MUX,
 	//debug / status
 	output wire LED1,
 	output wire LED2,
 	output wire DEBUG_TX,
-	input wire DEBUG_RX,
+	output wire DEBUG_RX,
 	//interface
 	output wire FIBER_TX,
 	input wire FIBER_RX,
@@ -33,8 +40,8 @@ module controller_top(
 	);
 
 	//clock signals
-	wire clk_80MHz, clk_160MHz;
- 
+	wire clk_80MHz, clk_240MHz;
+ 	/*
 	//wishbone signals, soc clock domain 
 	wire [31:0] wb_adr;
 	wire [31:0] wb_dat_i;
@@ -50,42 +57,113 @@ module controller_top(
 	//reset generation
 	reg [31:0] reset_counter = 0;
 	wire reset = ~reset_counter[31];
-
+	*/
 	//unused signal assign 
-	assign GATE_BOOST = test_counter[12];
-	assign DEBUG_TX = 1'b0;
 
-	//gpio assign 
 
-	assign {ADC_CS, LED1, LED2, GATE_CHARGE} = gpio_o[3:0];
-	assign gpio_i = 32'b0;
+	//assign DEBUG_TX = 1;
+	assign FIBER_TX = 1;
 
-	//test drive
-	reg [15:0] test_counter = 0;
+	assign ADC_SCLK = 0;
+	assign ADC_SDIO = 0;
+	assign ADC_CS = 1;
+	assign ADC_MODE = 0; 
 
-	assign GATE1 = test_counter[9];
-	assign GATE3 = test_counter[9];
+	/*
+	assign GATE1 = 0; 
+	assign GATE2 = 0;
+	assign GATE3 = 0;
+	assign GATE4 = 0;
+	*/
 
-	assign GATE2 = ~test_counter[9];
-	assign GATE4 = ~test_counter[9];
+	assign GATE_CHARGE = 1;
 
-	always@(posedge clk_160MHz) begin
-		test_counter <= test_counter + 1;
-		reset_counter <= {reset_counter[30:0], 1'b1};
+	assign ADC_MUX = 0;
+
+	//assign XADC_MUX = 1;
+
+
+
+	//register ADC_DATA
+	reg [9:0] ADC_data_captured;
+
+	//connecting wires 
+	wire [11:0] vin_adc, vout_adc;
+	wire xadc_update;
+	wire boost_init;
+
+	reg [31:0] counter = 0;
+
+	wire qcw_driver_start;
+
+	assign qcw_driver_start = (counter[26:0]==1) ? 1 : 0;
+
+	assign LED1 = counter[25];
+	assign LED2 = 0;
+	assign boost_init = counter[15];
+
+	always@(posedge clk_240MHz) begin 
+		ADC_data_captured <= ADC_DATA;
+		counter <= counter + 1;
 	end
 
+	assign GATE_BOOST = 0;
 
+	/*
 
+	xadc_interface xadc (
+		.clk     (clk_240MHz),
+		.vp_in   (VP_0),
+		.vn_in   (VN_0),
+		.mux_ctrl(XADC_MUX),
+		.new_data(xadc_update),
+		.data_a  (vin_adc),
+		.data_b  (vout_adc)
+	);
+
+	basic_boost_converter boost (
+		.clk     (clk_240MHz),
+		.il_adc  (ADC_data_captured),
+		.vin_adc (vin_adc),
+		.vout_adc(vout_adc),
+		.boost_en(1'b1),
+		.boost_init(boost_init),
+		.sw_out  (GATE_BOOST)
+	);
+	*/
+
+	qcw_driver #(
+		.STARTING_PERIOD(600),
+		.PHASE_LEAD     (80)
+		) driver (
+		.clk           (clk_240MHz),
+		.zcs           (~ZCS),
+		.halt          (0),
+		.start         (qcw_driver_start),
+		.phase_shift   (200),
+		.cycle_limit   (400),
+		.ready         (),
+		.cycle_finished(),
+		.fault         (),
+		.sw1_drive     (GATE1),
+		.sw2_drive     (GATE2),
+		.sw3_drive     (GATE3),
+		.sw4_drive     (GATE4),
+		.zcs_state_debug   (DEBUG_TX),
+		.output_state_debug(DEBUG_RX)
+	);
 
 	system_clocking system_clocks (
 		.clk_80MHz_i(ADC_DCO),
 		.clk_80MHz_o(clk_80MHz),
-		.clk_160MHz_o(clk_160MHz)
+		.clk_240MHz_o(clk_240MHz)
 	);
 
 
+
+	/*
 	base_soc soc (
-		.clk_i(clk_160MHz),
+		.clk_i(clk_240MHz),
 		.reset_i   (reset),
 		.wb_adr_o  (wb_adr),
 		.wb_dat_o  (wb_dat_o),
@@ -103,7 +181,7 @@ module controller_top(
 		.tx_o      (FIBER_TX),
 		.rx_i      (FIBER_RX)
 	);
-
+*/
 	
 	
 endmodule

@@ -33,10 +33,23 @@ simulate: src/firmware.hex
 	xelab --nolog -debug typical controller_top_tb glbl -s top_sim -L UNIFAST_VER -L UNISIMS_VER -L UNIMACRO_VER -L SECUREIP
 	xsim --nolog -g top_sim
 	#vivado -mode tcl -nojournal -log sim/vivado.log -source sim.tcl
-pll_simulate:
+simulate_pll:
 	xvlog --nolog rtl/qcw_pll.v rtl/qcw_pll_tb.v
 	xelab --nolog -debug typical qcw_pll_tb -s pll_sim
 	xsim --nolog -g pll_sim
+
+simulate_driver:
+	xvlog  rtl/qcw_driver.v rtl/qcw_driver_tb.v rtl/qcw_oscillator.v
+	xvlog $(VIVADO_BASE)/data/verilog/src/glbl.v
+	xelab -debug typical qcw_driver_tb glbl -s top_sim  -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip -L xpm
+	xsim  -g top_sim
+
+simulate_xadc:
+	xvlog  rtl/xadc_interface.v
+	xvlog  rtl/xadc_interface_tb.v 
+	xvlog $(VIVADO_BASE)/data/verilog/src/glbl.v
+	xelab -debug typical xadc_interface_tb glbl -s top_sim  -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip -L xpm
+	xsim  -g top_sim
 
 pll_full_simulate:
 	python3 qcw_pll_test.py

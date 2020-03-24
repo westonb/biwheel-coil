@@ -3,16 +3,16 @@
 module system_clocking(
 	input clk_80MHz_i,
 	output wire clk_80MHz_o,
-	output wire clk_160MHz_o
+	output wire clk_240MHz_o
 	);
 
 	wire clk_80MHz_nobuff;
-	wire clk_160MHz_nobuff;
+	wire clk_240MHz_nobuff;
 	wire clk_fb_nobuff;
 	wire clk_fb;
 
 	 MMCME2_ADV
-        #( 
+        #(
         .BANDWIDTH            ("OPTIMIZED"),
         .CLKOUT4_CASCADE      ("FALSE"),
         .COMPENSATION         ("ZHOLD"),
@@ -25,7 +25,7 @@ module system_clocking(
         .CLKOUT0_PHASE        (0.000),
         .CLKOUT0_DUTY_CYCLE   (0.500),
         .CLKOUT0_USE_FINE_PS  ("FALSE"),
-        .CLKOUT1_DIVIDE       (6),
+        .CLKOUT1_DIVIDE       (4),
         .CLKOUT1_PHASE        (0.000),
         .CLKOUT1_DUTY_CYCLE   (0.500),
         .CLKOUT1_USE_FINE_PS  ("FALSE"),
@@ -36,7 +36,7 @@ module system_clocking(
     .CLKFBOUTB           (),
     .CLKOUT0             (clk_80MHz_nobuff),
     .CLKOUT0B            (),
-    .CLKOUT1             (clk_160MHz_nobuff),
+    .CLKOUT1             (clk_240MHz_nobuff),
     .CLKOUT1B            (),
     .CLKOUT2             (),
     .CLKOUT2B            (),
@@ -84,8 +84,8 @@ module system_clocking(
 
 
   BUFG clkout2_buf
-   (.O   (clk_160MHz_o),
-    .I   (clk_160MHz_nobuff)
+   (.O   (clk_240MHz_o),
+    .I   (clk_240MHz_nobuff)
     );
 
 endmodule 
