@@ -79,7 +79,7 @@ report_utilization -file $PROJ_DIR/${PROJ_NM}_post_place_physopt_util.rpt
 write_checkpoint -force $PROJ_DIR/${PROJ_NM}_post_place_physopt.dcp
 
 # Route Design
-route_design -directive Explore
+route_design -directive AggressiveExplore
 report_timing_summary -file $PROJ_DIR/${PROJ_NM}_post_route_tim.rpt
 report_utilization -hierarchical -file $PROJ_DIR/${PROJ_NM}_post_route_util.rpt
 report_route_status -file $PROJ_DIR/${PROJ_NM}_post_route_status.rpt

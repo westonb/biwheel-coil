@@ -2,7 +2,8 @@
 module controller_top_tb;
 	reg [9:0] ADC_DATA;
 	reg ADC_DCO;
-	reg DEBUG_RX;
+	//reg DEBUG_RX;
+	wire DEBUG_RX;
 	reg FIBER_RX;
 	reg ZCS;
 	reg VP_0;
@@ -21,13 +22,15 @@ module controller_top_tb;
 	always #10 ADC_DCO = ~ ADC_DCO;
 
 	initial begin
-		ADC_DATA = 12'b10_0010_0000;
+		ADC_DATA = 512 + 300;
 		ADC_DCO = 0;
-		DEBUG_RX = 1;
+		//DEBUG_RX = 1;
 		FIBER_RX = 1;
 		ZCS = 0;
 		VP_0 = 0;
 		VN_0 = 0;
+		#10000;
+		ADC_DATA = 512 + 450;
 	end
 
 	controller_top uut (

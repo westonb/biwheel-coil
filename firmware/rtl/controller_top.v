@@ -41,7 +41,7 @@ module controller_top(
 
 	//clock signals
 	wire clk_80MHz, clk_240MHz;
- 	/*
+ 	
 	//wishbone signals, soc clock domain 
 	wire [31:0] wb_adr;
 	wire [31:0] wb_dat_i;
@@ -55,30 +55,22 @@ module controller_top(
 	wire [31:0] gpio_i, gpio_o;
 
 	//reset generation
-	reg [31:0] reset_counter = 0;
-	wire reset = ~reset_counter[31];
-	*/
+	wire reset = 0;
+	
 	//unused signal assign 
 
 
 	//assign DEBUG_TX = 1;
-	assign FIBER_TX = 1;
 
 	assign ADC_SCLK = 0;
 	assign ADC_SDIO = 0;
 	assign ADC_CS = 1;
 	assign ADC_MODE = 0; 
 
-	/*
-	assign GATE1 = 0; 
-	assign GATE2 = 0;
-	assign GATE3 = 0;
-	assign GATE4 = 0;
-	*/
 
 	assign GATE_CHARGE = 1;
 
-	assign ADC_MUX = 0;
+	assign ADC_MUX = 1;
 
 	//assign XADC_MUX = 1;
 
@@ -95,6 +87,9 @@ module controller_top(
 	reg [31:0] counter = 0;
 
 	wire qcw_driver_start;
+	wire qcw_cycle_done;
+	wire [7:0] qcw_phase;
+	wire qcw_halt;
 
 	assign qcw_driver_start = (counter[26:0]==1) ? 1 : 0;
 
@@ -109,8 +104,8 @@ module controller_top(
 
 	assign GATE_BOOST = 0;
 
-	/*
 
+	/*
 	xadc_interface xadc (
 		.clk     (clk_240MHz),
 		.vp_in   (VP_0),
@@ -126,11 +121,22 @@ module controller_top(
 		.il_adc  (ADC_data_captured),
 		.vin_adc (vin_adc),
 		.vout_adc(vout_adc),
-		.boost_en(1'b1),
+		.boost_en(1'b0),
 		.boost_init(boost_init),
 		.sw_out  (GATE_BOOST)
 	);
 	*/
+
+	simple_rampgen #(
+		.START_PHASE(100),
+		.END_PHASE(255),
+		.PHASE_STEP(76)
+	) rampgen (
+		.clk(clk_240MHz),
+		.start(qcw_driver_start), 
+		.cycle_done(qcw_cycle_done),
+		.phase_value(qcw_phase)
+	);
 
 	qcw_driver #(
 		.STARTING_PERIOD(600),
@@ -138,12 +144,12 @@ module controller_top(
 		) driver (
 		.clk           (clk_240MHz),
 		.zcs           (~ZCS),
-		.halt          (0),
+		.halt          (qcw_halt),
 		.start         (qcw_driver_start),
-		.phase_shift   (200),
-		.cycle_limit   (400),
+		.phase_shift   (qcw_phase),
+		.cycle_limit   (500),
 		.ready         (),
-		.cycle_finished(),
+		.cycle_finished(qcw_cycle_done),
 		.fault         (),
 		.sw1_drive     (GATE1),
 		.sw2_drive     (GATE2),
@@ -153,6 +159,17 @@ module controller_top(
 		.output_state_debug(DEBUG_RX)
 	);
 
+	qcw_ocd #(
+		.OCD_LIMIT(60) //3A
+	) ocd (
+		.clk        (clk_240MHz),
+		.start      (qcw_driver_start),
+		.enable     (1),
+		.adc_dout   (ADC_DATA),
+		.current_max(),
+		.qcw_halt   (qcw_halt)
+	);
+
 	system_clocking system_clocks (
 		.clk_80MHz_i(ADC_DCO),
 		.clk_80MHz_o(clk_80MHz),
@@ -160,8 +177,8 @@ module controller_top(
 	);
 
 
-
 	/*
+	
 	base_soc soc (
 		.clk_i(clk_240MHz),
 		.reset_i   (reset),
@@ -181,7 +198,6 @@ module controller_top(
 		.tx_o      (FIBER_TX),
 		.rx_i      (FIBER_RX)
 	);
-*/
 	
-	
+	*/
 endmodule
