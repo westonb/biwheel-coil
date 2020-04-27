@@ -5,17 +5,21 @@ module qcw_driver #(
 	)(
 	input wire clk, 
 	input wire zcs,
+
 	input wire halt, 
 	input wire start,
 	input wire [7:0] phase_shift,
 	input wire [15:0] cycle_limit,
+
 	output wire ready,
 	output wire cycle_finished,
 	output wire fault,
+
 	output wire sw1_drive,
 	output wire sw2_drive, 
 	output wire sw3_drive,
 	output wire sw4_drive,
+	
 	output wire zcs_state_debug,
 	output wire output_state_debug
 	);	
