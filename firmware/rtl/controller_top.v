@@ -39,103 +39,281 @@ module controller_top(
 	output wire GATE_BOOST
 	);
 
+
 	//clock signals
 	wire clk_80MHz, clk_240MHz;
  	
-	//wishbone signals, soc clock domain 
-	wire [31:0] wb_adr;
-	wire [31:0] wb_dat_i;
-	wire [31:0] wb_dat_o;
-	wire [3:0] wb_sel; 
-	wire wb_stb;
-	wire wb_ack;
-	wire wb_cyc;
-	wire wb_we;
 
 	wire [31:0] gpio_i, gpio_o;
 
 	//reset generation
-	wire reset = 0;
-	
-	//unused signal assign 
+	wire reset;
+
+	//connecting wires 
+	wire [11:0] vin_adc, vout_adc;
+
+	reg [31:0] counter = 0;
+
+	wire qcw_start;
+	wire qcw_halt;
+	wire [7:0] qcw_phase_value;
+	wire qcw_ready;
+	wire qcw_cycle_done;
+	wire [15:0] qcw_cycle_limit;
 
 
-	//assign DEBUG_TX = 1;
+	//wires for bus connections 
+	wire core_valid, core_ready;
+	wire [31:0] core_addr, core_wdata, core_rdata;
+	wire [3:0] core_wstrb;
+
+	//ram and rom 
+	wire [31:0] ram_rdata, rom_rdata;
+	wire ram_ready, rom_ready;
+
+	//uart
+	wire [31:0] uart_rdata;
+	wire uart_ready;
+
+	//clock crossing 
+	wire [31:0] crossing_rdata, crossed_rdata;
+	wire crossing_ready, crossed_ready;
+	wire [31:0] crossed_addr, crossed_wdata;
+	wire [3:0] crossed_wstrb;
+	wire crossed_valid;
+
+	//GPIO peripheral
+	wire [31:0] gpio_rdata;
+	wire gpio_ready;
+
+	//QCW peripherals 
+	wire [31:0] qcw_control_rdata, qcw_ramp_rdata, qcw_ocd_rdata, boost_rdata;
+	wire qcw_control_ready, qcw_ramp_ready, qcw_ocd_ready, boost_ready;
+
+	assign crossed_ready = gpio_ready | qcw_control_ready | qcw_ramp_ready | qcw_ocd_ready | boost_ready;
+	assign crossed_rdata = gpio_rdata | qcw_control_rdata | qcw_ramp_rdata | qcw_ocd_rdata | boost_rdata;
+
+	assign core_ready = ram_ready | rom_ready | crossing_ready;
+	assign core_rdata = ram_rdata | rom_rdata | crossing_rdata;
+
+	assign reset = (counter < 10) ? 1 : 0;
 
 	assign ADC_SCLK = 0;
 	assign ADC_SDIO = 0;
 	assign ADC_CS = 1;
 	assign ADC_MODE = 0; 
 
-
-	assign GATE_CHARGE = 1;
-
-	assign ADC_MUX = 1;
-
-	//assign XADC_MUX = 1;
+	assign gpio_i = {31'b0, OVER_TEMP};
+	assign ADC_MUX = gpio_o[0];
+	assign GATE_CHARGE = gpio_o[1];
+	assign {LED2,LED1} = gpio_o[3:2];
 
 
-
-	//register ADC_DATA
-	reg [9:0] ADC_data_captured;
-
-	//connecting wires 
-	wire [11:0] vin_adc, vout_adc;
-	wire xadc_update;
-	wire boost_init;
-
-	reg [31:0] counter = 0;
-
-	wire qcw_driver_start;
-	wire qcw_cycle_done;
-	wire [7:0] qcw_phase;
-	wire qcw_halt;
-
-	assign qcw_driver_start = (counter[26:0]==1) ? 1 : 0;
-
-	assign LED1 = counter[25];
-	assign LED2 = 0;
-	assign boost_init = counter[15];
-
-	always@(posedge clk_240MHz) begin 
-		ADC_data_captured <= ADC_DATA;
-		counter <= counter + 1;
-	end
-
-	assign GATE_BOOST = 0;
-
-
-	/*
-	xadc_interface xadc (
-		.clk     (clk_240MHz),
-		.vp_in   (VP_0),
-		.vn_in   (VN_0),
-		.mux_ctrl(XADC_MUX),
-		.new_data(xadc_update),
-		.data_a  (vin_adc),
-		.data_b  (vout_adc)
-	);
-
-	basic_boost_converter boost (
-		.clk     (clk_240MHz),
-		.il_adc  (ADC_data_captured),
-		.vin_adc (vin_adc),
-		.vout_adc(vout_adc),
-		.boost_en(1'b0),
-		.boost_init(boost_init),
-		.sw_out  (GATE_BOOST)
-	);
+	/* 
+	Softcore Memory Map: 
+	32'h00000000 RAM
+	32'h00100000 ROM
+	32'h01000000 UART
+	//cross clock domain crossing 
+	32'h10000000 GPIO
+	32'h11000000 QCW Ramp Control 
+	32'h12000000 QCW Driver Control 
+	32'h13000000 QCW OCD Control 
+	32'h14000000 Boost Control 
 	*/
 
-	simple_rampgen #(
-		.START_PHASE(100),
-		.END_PHASE(255),
-		.PHASE_STEP(76)
-	) rampgen (
+
+
+
+	always@(posedge clk_80MHz) begin 
+		if (counter < 10000) counter <= counter + 1;
+	end
+
+
+
+
+	picorv32 #(
+		.ENABLE_MUL(0),
+		.ENABLE_IRQ(0),
+		.PROGADDR_RESET(32'h00100000), //start of ROM
+		.STACKADDR(32'h001000) //end of RAM
+	) picorv32_core (
+		.clk      (clk_80MHz   ),
+		.resetn   (~reset),
+
+		.mem_valid(core_valid),
+		.mem_addr (core_addr),
+		.mem_wdata(core_wdata),
+		.mem_wstrb(core_wstrb),
+		.mem_ready(core_ready),
+		.mem_rdata(core_rdata),
+
+		.irq(32'b0)
+	);
+
+	simple_mem #(
+		.BASE_ADDR(32'h00100000),
+		.LOG_SIZE (12),
+		.MEMFILE  ("src/firmware.hex")
+	) rom (
+		.clk        (clk_80MHz),
+		.mem_valid_i(core_valid),
+		.mem_ready_o(rom_ready),
+		.mem_addr_i (core_addr),
+		.mem_wdata_i(core_wdata),
+		.mem_wstrb_i(core_wstrb),
+		.mem_rdata_o(rom_rdata)
+	);
+
+	simple_mem #(
+		.BASE_ADDR(32'h00000000),
+		.LOG_SIZE (10),
+		.MEMFILE  ("")
+	) ram (
+		.clk        (clk_80MHz),
+		.mem_valid_i(core_valid),
+		.mem_ready_o(ram_ready),
+		.mem_addr_i (core_addr),
+		.mem_wdata_i(core_wdata),
+		.mem_wstrb_i(core_wstrb),
+		.mem_rdata_o(ram_rdata)
+	);
+
+	interface_simpleuart #(
+		.BASE_ADDR(32'h01000000)
+	) uart ( 
+		.clk(clk_80MHz),
+		.reset(reset),
+
+		.mem_valid_i(core_valid),
+		.mem_ready_o(uart_ready),
+		.mem_addr_i (core_addr),
+		.mem_wdata_i(core_wdata),
+		.mem_wstrb_i(core_wstrb),
+		.mem_rdata_o(uart_rdata),
+
+		.rx(FIBER_RX),
+		.tx(FIBER_TX)
+	);
+
+
+	simple_clock_crossing #(
+		.BASE_ADDR (32'h10000000),
+		.UPPER_ADDR(32'h20000000)
+	) clock_crossing (
+		.clk_a      (clk_80MHz),
+		.clk_b      (clk_240MHz),
+		.mem_valid_a(core_valid),
+		.mem_ready_a(crossing_ready),
+		.mem_addr_a (core_addr),
+		.mem_wdata_a(core_wdata),
+		.mem_wstrb_a(core_wstrb),
+		.mem_rdata_a(crossing_rdata),
+
+		.mem_valid_b(crossed_valid),
+		.mem_ready_b(crossed_ready),
+		.mem_addr_b (crossed_addr),
+		.mem_wdata_b(crossed_wdata),
+		.mem_wstrb_b(crossed_wstrb),
+		.mem_rdata_b(crossed_rdata)
+	);
+
+	gpio_control #(
+		.BASE_ADDR(32'h10000000)
+	) simple_gpio (
 		.clk(clk_240MHz),
-		.start(qcw_driver_start), 
-		.cycle_done(qcw_cycle_done),
-		.phase_value(qcw_phase)
+		.reset(1'b0),
+		.mem_valid_i(crossed_valid),
+		.mem_ready_o(gpio_ready), 
+		.mem_addr_i(crossed_addr), 
+		.mem_wdata_i(crossed_wdata), 
+		.mem_wstrb_i(crossed_wstrb), 
+		.mem_rdata_o(gpio_rdata), 
+		.gpio_i(gpio_i), 
+		.gpio_o(gpio_o)
+	);
+
+	
+	qcw_ramp_control #(
+		.BASE_ADDR(32'h11000000)
+	) simple_ramp (
+		.clk(clk_240MHz),
+		.reset(1'b0),
+		.mem_valid_i(crossed_valid),
+		.mem_ready_o(qcw_ramp_ready), 
+		.mem_addr_i(crossed_addr), 
+		.mem_wdata_i(crossed_wdata), 
+		.mem_wstrb_i(crossed_wstrb), 
+		.mem_rdata_o(qcw_ramp_rdata), 
+
+		.qcw_start(qcw_start),
+		.qcw_cycle_done(qcw_cycle_done), 
+		.qcw_halt(qcw_halt), 
+		.qcw_phase_value(qcw_phase_value)
+	);
+
+
+	qcw_driver_control #(
+		.BASE_ADDR(32'h12000000)
+	) simple_control (
+		.clk(clk_240MHz),
+		.reset(1'b0),
+
+		.mem_valid_i(crossed_valid),
+		.mem_ready_o(qcw_control_ready), 
+		.mem_addr_i(crossed_addr), 
+		.mem_wdata_i(crossed_wdata), 
+		.mem_wstrb_i(crossed_wstrb), 
+		.mem_rdata_o(qcw_control_rdata), 
+
+		.qcw_start(qcw_start), 
+		.qcw_cycle_limit(qcw_cycle_limit), 
+		.qcw_halt(qcw_halt), 
+		.qcw_ready(qcw_ready)
+	);
+
+
+	qcw_ocd_control #(
+		.BASE_ADDR(32'h13000000)
+	) simple_ocd (
+		.clk(clk_240MHz),
+		.reset(1'b0),
+
+		.mem_valid_i(crossed_valid),
+		.mem_ready_o(qcw_ocd_ready), 
+		.mem_addr_i(crossed_addr), 
+		.mem_wdata_i(crossed_wdata), 
+		.mem_wstrb_i(crossed_wstrb), 
+		.mem_rdata_o(qcw_ocd_rdata), 
+
+		.qcw_start(qcw_start), 
+		.qcw_halt(qcw_halt)
+	);
+
+
+	boost_converter_control #(
+		.BASE_ADDR(32'h14000000), 
+		.I_LIMIT(), 
+		.VOUT_HYSTERESIS(), 
+		.OFF_TIME(), 
+		.ON_TIME_MAX(), 
+		.BLANK_TIME()
+	) simple_boost (
+		.clk(clk_240MHz),
+		.reset(1'b0),
+
+		.mem_valid_i(crossed_valid),
+		.mem_ready_o(boost_ready), 
+		.mem_addr_i(crossed_addr), 
+		.mem_wdata_i(crossed_wdata), 
+		.mem_wstrb_i(crossed_wstrb), 
+		.mem_rdata_o(boost_rdata), 
+
+		.il_adc(ADC_DATA), 
+		.vin_adc(vin_adc), 
+		.vout_adc(vout_adc), 
+		.sw_out(GATE_BOOST), 
+		.boost_running()
 	);
 
 	qcw_driver #(
@@ -145,10 +323,10 @@ module controller_top(
 		.clk           (clk_240MHz),
 		.zcs           (~ZCS),
 		.halt          (qcw_halt),
-		.start         (qcw_driver_start),
-		.phase_shift   (qcw_phase),
-		.cycle_limit   (500),
-		.ready         (),
+		.start         (qcw_start),
+		.phase_shift   (qcw_phase_value),
+		.cycle_limit   (qcw_cycle_limit),
+		.ready         (qcw_ready),
 		.cycle_finished(qcw_cycle_done),
 		.fault         (),
 		.sw1_drive     (GATE1),
@@ -159,15 +337,14 @@ module controller_top(
 		.output_state_debug(DEBUG_RX)
 	);
 
-	qcw_ocd #(
-		.OCD_LIMIT(60) //3A
-	) ocd (
-		.clk        (clk_240MHz),
-		.start      (qcw_driver_start),
-		.enable     (1),
-		.adc_dout   (ADC_DATA),
-		.current_max(),
-		.qcw_halt   (qcw_halt)
+	xadc_interface xadc (
+		.clk     (clk_240MHz),
+		.vp_in   (VP_0),
+		.vn_in   (VN_0),
+		.mux_ctrl(XADC_MUX),
+		.new_data(),
+		.data_a  (vin_adc),
+		.data_b  (vout_adc)
 	);
 
 	system_clocking system_clocks (
@@ -176,28 +353,5 @@ module controller_top(
 		.clk_240MHz_o(clk_240MHz)
 	);
 
-
-	/*
 	
-	base_soc soc (
-		.clk_i(clk_240MHz),
-		.reset_i   (reset),
-		.wb_adr_o  (wb_adr),
-		.wb_dat_o  (wb_dat_o),
-		.wb_dat_i  (wb_dat_i),
-		.wb_we_o   (wb_we),
-		.wb_sel_o  (wb_sel),
-		.wb_stb_o  (wb_stb),
-		.wb_ack_i  (wb_ack),
-		.wb_cyc_o  (wb_cyc),
-		.gpio_o    (gpio_o),
-		.gpio_i    (gpio_i),
-		.spi_mosi_o(ADC_SDIO),
-		.spi_sclk_o(ADC_SCLK),
-		.spi_miso_i(1'b0),
-		.tx_o      (FIBER_TX),
-		.rx_i      (FIBER_RX)
-	);
-	
-	*/
 endmodule

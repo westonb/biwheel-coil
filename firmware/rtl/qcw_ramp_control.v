@@ -1,4 +1,4 @@
-
+`timescale 1ns/1ps
 module qcw_ramp_control #(
 	parameter BASE_ADDR = 32'h00000000
 )(
@@ -44,7 +44,7 @@ module qcw_ramp_control #(
 
 		//ramp gen logic 
 		if(qcw_cycle_done) cycle_counter <= cycle_counter + 1;
-		if(start) cycle_counter <= 0;
+		if(qcw_start) cycle_counter <= 0;
 
 		if(qcw_cycle_done && fifo_empty) begin 
 			qcw_halt <= 1'b1;
@@ -63,22 +63,22 @@ module qcw_ramp_control #(
 
 			case (mem_addr_i)
 
-				(BASE_ADDR+FIFO_STATUS_REG_OFFSET) begin
+				(BASE_ADDR+FIFO_STATUS_REG_OFFSET): begin
 					mem_rdata_o <= {30'b0, fifo_full, fifo_empty};
 				end
 
-				(BASE_ADDR+FIFO_WRITE_REG_OFFSET) begin 
+				(BASE_ADDR+FIFO_WRITE_REG_OFFSET): begin 
 					mem_rdata_o <= 32'b0;
 					if(|mem_wstrb_i) begin
 						fifo_wr_en <= 1'b1;
-						fifo_din <= mem_wdata_i[8:0]
+						fifo_din <= mem_wdata_i[8:0];
 					end
 				end
-				(BASE_ADDR+FIFO_READ_REG_OFFSET) begin 
+				(BASE_ADDR+FIFO_READ_REG_OFFSET): begin 
 					fifo_rd_en <= 1'b1;
 					mem_rdata_o <= {23'b0, fifo_dout};
 				end
-				(BASE_ADDR+FIFO_COUNT_REG_OFFSET) begin
+				(BASE_ADDR+FIFO_COUNT_REG_OFFSET): begin
 					mem_rdata_o <= {16'b0, cycle_counter};
 				end
 
@@ -90,8 +90,7 @@ module qcw_ramp_control #(
 		end 
 		else begin 
 			mem_ready_o <= 1'b0;
-			mem_ready_o <= 1'b0;
-			mem_rdata_i <= 32'b0;
+			mem_rdata_o <= 32'b0;
 			fifo_wr_en <= 1'b0;
 			fifo_rd_en <= 1'b0;
 

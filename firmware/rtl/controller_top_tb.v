@@ -8,14 +8,20 @@ module controller_top_tb;
 	reg ZCS;
 	reg VP_0;
 	reg VN_0;
+	reg OVER_TEMP;
 
 	wire ADC_SCLK;
 	wire ADC_SDIO;
 	wire ADC_CS;
 	wire ADC_MODE;
+
 	wire LED1;
 	wire LED2;
-	wire DEBUG_TX;
+	wire DEBUG_TX, FIBER_TX;
+
+	wire GATE1, GATE2, GATE3, GATE4, GATE_CHARGE, GATE_BOOST;
+
+	wire ADC_MUX, XADC_MUX;
 	
 
 
@@ -29,6 +35,7 @@ module controller_top_tb;
 		ZCS = 0;
 		VP_0 = 0;
 		VN_0 = 0;
+		OVER_TEMP = 0;
 		#10000;
 		ADC_DATA = 512 + 450;
 	end

@@ -1,22 +1,23 @@
+`timescale 1ns/1ps
 module qcw_ocd_control #(
 	parameter BASE_ADDR = 32'h00000000
 )(
 	input wire clk, 
+	input wire reset,
 
 	input wire mem_valid_i,
 	output reg mem_ready_o,
 	input wire [31:0] mem_addr_i,
 	input wire [31:0] mem_wdata_i,
 	input wire [3:0] mem_wstrb_i,
-	output reg [31:0] mem_rdata_o
+	output reg [31:0] mem_rdata_o,
 
 	input wire [9:0] adc_dout,
 	
 	input wire qcw_start, 
-	input wire qcw_cycle_done, 
-	
 	output reg qcw_halt
 );
+	localparam ADDR_RANGE = 4*20;
 	localparam OCD_CURR_LIMIT_REG_OFFSET = 0;
 	localparam OCD_CURR_MEAS_REG_OFFSET = 4;
 	localparam OCD_STATUS_REG_OFFSET = 8;
@@ -57,20 +58,20 @@ module qcw_ocd_control #(
 
 			case (mem_addr_i)
 
-				(BASE_ADDR+OCD_CURR_LIMIT_REG_OFFSET) begin
+				(BASE_ADDR+OCD_CURR_LIMIT_REG_OFFSET): begin
 					current_limit <= mem_wdata_i[9:0];
 				end
 
-				(BASE_ADDR+OCD_CURR_MEAS_REG_OFFSET) begin 
+				(BASE_ADDR+OCD_CURR_MEAS_REG_OFFSET): begin 
 					mem_rdata_o <= {22'b0, adc_abs_max};
 				end
-				(BASE_ADDR+OCD_STATUS_REG_OFFSET) begin 
+				(BASE_ADDR+OCD_STATUS_REG_OFFSET): begin 
 					mem_rdata_o <= {31'b0, ocd_latched};
 					if(|mem_wstrb_i) begin
 						ocd_latched <= 1'b0;
 					end
 				end
-				(BASE_ADDR+OCD_ADC_READING_REG_OFFSET) begin
+				(BASE_ADDR+OCD_ADC_READING_REG_OFFSET): begin
 					mem_rdata_o <= {22'b0, adc_dout_reg};
 				end
 
@@ -82,8 +83,7 @@ module qcw_ocd_control #(
 		end 
 		else begin 
 			mem_ready_o <= 1'b0;
-			mem_ready_o <= 1'b0;
-			mem_rdata_i <= 32'b0;
+			mem_rdata_o <= 32'b0;
 		end
 	end
 

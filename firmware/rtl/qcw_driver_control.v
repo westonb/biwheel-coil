@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 module qcw_driver_control #(
 	parameter BASE_ADDR = 32'h00000000
 )(
@@ -15,7 +16,7 @@ module qcw_driver_control #(
 	output reg [15:0] qcw_cycle_limit,
 	output reg qcw_halt, 
 
-	input wire ready
+	input wire qcw_ready
 );
 
 	localparam ADDR_RANGE = 4*20;
@@ -25,6 +26,12 @@ module qcw_driver_control #(
 
 	wire device_addressed;
 	reg transaction_processed; 
+
+	initial begin 
+		qcw_halt = 0;
+		qcw_start = 0;
+		qcw_cycle_limit = 0;
+	end
 
 	assign device_addressed = mem_valid_i && (BASE_ADDR<=mem_addr_i) && ((BASE_ADDR + ADDR_RANGE)>mem_addr_i);
 
@@ -39,19 +46,19 @@ module qcw_driver_control #(
 
 			case (mem_addr_i)
 
-				(BASE_ADDR+DRIVER_RUN_REG_OFFSET) begin
-					mem_rdata_o <= {31'b0, ready};
+				(BASE_ADDR+DRIVER_RUN_REG_OFFSET): begin
+					mem_rdata_o <= {31'b0, qcw_ready};
 					if (|mem_wstrb_i) qcw_start <= 1'b1;
 				end
 
-				(BASE_ADDR+DRIVER_CYCLE_LIMIT_REG_OFFSET) begin 
+				(BASE_ADDR+DRIVER_CYCLE_LIMIT_REG_OFFSET): begin 
 					mem_rdata_o <= 32'b0;
 					if(|mem_wstrb_i) begin
-						qcw_cycle_limit <= mem_wdata_i[15:0]
+						qcw_cycle_limit <= mem_wdata_i[15:0];
 					end
 				end
 
-				(BASE_ADDR+DRIVER_HALT_REG_OFFSET) begin 
+				(BASE_ADDR+DRIVER_HALT_REG_OFFSET): begin 
 					mem_rdata_o <= 32'b0;
 					qcw_halt <= 1'b1;
 				end
@@ -64,8 +71,7 @@ module qcw_driver_control #(
 		end 
 		else begin 
 			mem_ready_o <= 1'b0;
-			mem_ready_o <= 1'b0;
-			mem_rdata_i <= 32'b0;
+			mem_rdata_o <= 32'b0;
 			
 			qcw_halt <= 1'b0;
 			qcw_start <= 1'b0;

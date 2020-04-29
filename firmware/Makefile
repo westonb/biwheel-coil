@@ -30,7 +30,7 @@ all: bitstream.bit
 simulate: src/firmware.hex
 	xvlog --nolog rtl/*.v
 	xvlog --nolog $(VIVADO_BASE)/data/verilog/src/glbl.v
-	xelab --nolog -debug typical controller_top_tb glbl -s top_sim -L UNIFAST_VER -L UNISIMS_VER -L UNIMACRO_VER -L SECUREIP
+	xelab --nolog -debug typical controller_top_tb glbl -s top_sim -L UNIFAST_VER -L UNISIMS_VER -L UNIMACRO_VER -L SECUREIP -L xpm
 	xsim --nolog -g top_sim
 	#vivado -mode tcl -nojournal -log sim/vivado.log -source sim.tcl
 simulate_pll:
