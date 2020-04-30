@@ -56,6 +56,9 @@ module controller_top(
 
 	wire qcw_start;
 	wire qcw_halt;
+	wire qcw_halt_driver;
+	wire qcw_halt_ocd;
+	wire qcw_halt_ramp;
 	wire [7:0] qcw_phase_value;
 	wire qcw_ready;
 	wire qcw_cycle_done;
@@ -93,8 +96,10 @@ module controller_top(
 	assign crossed_ready = gpio_ready | qcw_control_ready | qcw_ramp_ready | qcw_ocd_ready | boost_ready;
 	assign crossed_rdata = gpio_rdata | qcw_control_rdata | qcw_ramp_rdata | qcw_ocd_rdata | boost_rdata;
 
-	assign core_ready = ram_ready | rom_ready | crossing_ready;
-	assign core_rdata = ram_rdata | rom_rdata | crossing_rdata;
+	assign core_ready = ram_ready | rom_ready | crossing_ready | uart_ready;
+	assign core_rdata = ram_rdata | rom_rdata | crossing_rdata | uart_rdata;
+
+	assign qcw_halt = qcw_halt_ramp | qcw_halt_driver | qcw_halt_ocd;
 
 	assign reset = (counter < 10) ? 1 : 0;
 
@@ -104,7 +109,7 @@ module controller_top(
 	assign ADC_MODE = 0; 
 
 	assign gpio_i = {31'b0, OVER_TEMP};
-	assign ADC_MUX = gpio_o[0];
+	assign ADC_MUX = gpio_o[0]; //mux==1: OCD connected, mux==0 boost converter current sense
 	assign GATE_CHARGE = gpio_o[1];
 	assign {LED2,LED1} = gpio_o[3:2];
 
@@ -248,7 +253,7 @@ module controller_top(
 
 		.qcw_start(qcw_start),
 		.qcw_cycle_done(qcw_cycle_done), 
-		.qcw_halt(qcw_halt), 
+		.qcw_halt(qcw_halt_ramp), 
 		.qcw_phase_value(qcw_phase_value)
 	);
 
@@ -268,7 +273,7 @@ module controller_top(
 
 		.qcw_start(qcw_start), 
 		.qcw_cycle_limit(qcw_cycle_limit), 
-		.qcw_halt(qcw_halt), 
+		.qcw_halt(qcw_halt_driver), 
 		.qcw_ready(qcw_ready)
 	);
 
@@ -286,8 +291,10 @@ module controller_top(
 		.mem_wstrb_i(crossed_wstrb), 
 		.mem_rdata_o(qcw_ocd_rdata), 
 
+
+		.adc_dout(ADC_DATA),
 		.qcw_start(qcw_start), 
-		.qcw_halt(qcw_halt)
+		.qcw_halt(qcw_halt_ocd)
 	);
 
 

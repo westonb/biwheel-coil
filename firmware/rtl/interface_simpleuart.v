@@ -154,26 +154,23 @@ module interface_simpleuart #(
 	output tx
 	);
 
+
+	localparam DIV_ADDR_OFFSET = 32'h00;
 	localparam DAT_ADDR_OFFSET = 32'h04;
-	localparam DIV_ADDR_OFFSET = 32'h08;
 
 	
-	wire reg_div_we;
-	wire [31:0] reg_div_di;
 	wire [31:0] reg_div_do;
 
-	wire reg_dat_re;
-	wire [31:0] reg_dat_di;
 	wire [31:0] reg_dat_do;
 	wire reg_dat_wait; 
 
 	wire reg_div_sel;
 	wire reg_dat_sel;
 
-	assign reg_div_sel = (mem_addr_i == (BASE_ADDR+DIV_ADDR_OFFSET));
-	assign reg_dat_sel = (mem_addr_i ==(BASE_ADDR+DAT_ADDR_OFFSET));
+	assign reg_div_sel = (mem_addr_i == (BASE_ADDR+DIV_ADDR_OFFSET)) && mem_valid_i;
+	assign reg_dat_sel = (mem_addr_i ==(BASE_ADDR+DAT_ADDR_OFFSET)) && mem_valid_i;
 
-	assign mem_rdata_o = reg_div_sel ? reg_dat_do : reg_dat_sel ? reg_dat_do : 32'b0;
+	assign mem_rdata_o = reg_div_sel ? reg_div_do : reg_dat_sel ? reg_dat_do : 32'b0;
 
 	assign mem_ready_o = (reg_dat_sel && !reg_dat_wait) || reg_div_sel;
 	
@@ -189,7 +186,7 @@ module interface_simpleuart #(
 		.reg_div_do  (reg_div_do),
 
 		.reg_dat_we  (reg_dat_sel ? mem_wstrb_i[0] : 1'b 0),
-		.reg_dat_re  (reg_dat_sel && !(|mem_wstrb_i)),
+		.reg_dat_re  (reg_dat_sel && !(mem_wstrb_i)),
 		.reg_dat_di  (mem_wdata_i),
 		.reg_dat_do  (reg_dat_do),
 		.reg_dat_wait(reg_dat_wait)

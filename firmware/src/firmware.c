@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "peripherals.h"
+
 /*
 firmware for PowerSoC V0.1
 6 clock cycles per CPU cycle
@@ -10,16 +12,28 @@ firmware for PowerSoC V0.1
 //extern uint32_t sram;
 
 
-#define GPIO_CHARGE 0x01
-#define GPIO_LED_2  0x02
-#define GPIO_LED_1 0x04
-#define GPIO_ADC_CS 0x08 
+#define GPIO_ADC_MUX 0x01
+#define GPIO_GATE_CHARGE  0x02
+#define GPIO_LED1 0x04
+#define GPIO_LED2 0x08 
 
 
 
 volatile uint32_t recv_val; 
 volatile uint32_t foo;
 
+void putchar(char c)
+{
+	if (c == '\n')
+		putchar('\r');
+	reg_uart_data = c;
+}
+
+void print(const char *p)
+{
+	while (*p)
+		putchar(*(p++));
+}
 
 
 void delay_ms(uint32_t ms){
@@ -37,13 +51,18 @@ void delay_ms(uint32_t ms){
 
 
 void main()
-{
-	
+{	
+	//init uart at 38400 baud rate
+	//reg_uart_clkdiv = 2084;
+	reg_uart_clkdiv = 104;
 
 	while (1)
-	{
+	{	
+		print("Hello World \n");
 
-		foo++;
-
+		delay_ms(200);
+		reg_gpio_out = GPIO_LED1;
+		delay_ms(400); 
+		reg_gpio_out = GPIO_LED2;
 	}
 }

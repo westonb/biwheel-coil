@@ -40,6 +40,7 @@ module boost_converter_control#(
 	localparam BOOST_STATUS_REG_OFFSET = 8;
 	localparam BOOST_VIN_REG_OFFSET = 12;
 	localparam BOOST_VOUT_REG_OFFSET = 16;
+	localparam BOOST_VOUT_SET_REG_OFFSET= 20;
 
 
 	wire device_addressed;
@@ -128,6 +129,10 @@ module boost_converter_control#(
 				end
 				(BASE_ADDR+BOOST_VOUT_REG_OFFSET): begin
 					mem_rdata_o <= {20'b0, vout_adc_reg};
+				end
+				(BASE_ADDR+BOOST_VOUT_SET_REG_OFFSET): begin
+					if(|mem_wstrb_i) vout_target <= mem_wdata_i[11:0];
+					mem_rdata_o <= {20'b0, vout_target};
 				end
 
 				default: begin 

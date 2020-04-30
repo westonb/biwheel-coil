@@ -22,6 +22,10 @@ module controller_top_tb;
 	wire GATE1, GATE2, GATE3, GATE4, GATE_CHARGE, GATE_BOOST;
 
 	wire ADC_MUX, XADC_MUX;
+
+	wire clk;
+
+	assign clk = ADC_DCO;
 	
 
 
@@ -66,5 +70,32 @@ module controller_top_tb;
 		.FIBER_RX(FIBER_RX),
 		.ZCS     (ZCS)
 		);
+
+	reg [7:0] buffer;
+	localparam ser_half_period = 53;
+	event ser_sample;
+
+	always begin
+		@(negedge FIBER_TX);
+
+		repeat (ser_half_period) @(posedge clk);
+		-> ser_sample; // start bit
+
+		repeat (8) begin
+			repeat (ser_half_period) @(posedge clk);
+			repeat (ser_half_period) @(posedge clk);
+			buffer = {FIBER_TX, buffer[7:1]};
+			-> ser_sample; // data bit
+		end
+
+		repeat (ser_half_period) @(posedge clk);
+		repeat (ser_half_period) @(posedge clk);
+		-> ser_sample; // stop bit
+
+		if (buffer < 32 || buffer >= 127)
+			$display("Serial data: %d", buffer);
+		else
+			$display("Serial data: '%c'", buffer);
+	end
 
 endmodule 

@@ -35,20 +35,36 @@ module xadc_interface(
 	wire drdy_out;
 	wire eoc_out;
 
+    reg busy_out_reg;
+    reg [15:0] do_out_reg;
+    reg drdy_out_reg;
+    reg eoc_out_reg;
+
+
     initial begin 
         mux_ctrl = 1'b0;
         new_data = 1'b0;
         data_a = 12'b0;
         data_b = 12'b0;
         fsm_state = FSM_BOOT;
+
+        busy_out_reg = 0;
+        do_out_reg = 0;
+        drdy_out_reg = 0;
+        eoc_out_reg = 0;
     end 
 
 	always @(posedge clk) begin
 
+        busy_out_reg <= busy_out;
+        do_out_reg <= do_out;
+        drdy_out_reg <= drdy_out;
+        eoc_out_reg <= eoc_out;
+
 		case (fsm_state)
 
             FSM_BOOT: begin
-                if (!busy_out) begin
+                if (!busy_out_reg) begin
                     timer <= timer+1;
                     if (timer == 600000) fsm_state <= FSM_START_1;
                 end
@@ -61,7 +77,7 @@ module xadc_interface(
 
 			FSM_START_1: begin
                 new_data <= 1'b0;
-                if(!busy_out) begin
+                if(!busy_out_reg) begin
     				mux_ctrl <= 1'b0;
     				fsm_state <= FSM_BLANK_1;
                     timer <= 0;
@@ -84,7 +100,7 @@ module xadc_interface(
 
 			FSM_WAIT_1: begin 
 				conversion_start <= 1'b0;
-                if (eoc_out) begin
+                if (eoc_out_reg) begin
 				    fsm_state <= FSM_READ_1;
                     den_in <= 1'b1;
                 end
@@ -92,8 +108,8 @@ module xadc_interface(
 
             FSM_READ_1: begin
                 den_in <= 1'b0;
-                if(drdy_out) begin
-                    data_a <= do_out[15:4];
+                if(drdy_out_reg) begin
+                    data_a <= do_out_reg[15:4];
                     fsm_state <= FSM_START_2;
                     mux_ctrl <= 1'b1;
                 end
@@ -101,7 +117,7 @@ module xadc_interface(
 
 
             FSM_START_2: begin
-                if(!busy_out) begin
+                if(!busy_out_reg) begin
                     fsm_state <= FSM_BLANK_2;
                      timer <= 0;
                 end
@@ -123,7 +139,7 @@ module xadc_interface(
 
             FSM_WAIT_2: begin 
                 conversion_start <= 1'b0;
-                if (eoc_out) begin
+                if (eoc_out_reg) begin
                     fsm_state <= FSM_READ_2;
                     den_in <= 1'b1;
                 end
@@ -131,8 +147,8 @@ module xadc_interface(
 
             FSM_READ_2: begin
                 den_in <= 1'b0;
-                if(drdy_out) begin
-                    data_b <= do_out[15:4];
+                if(drdy_out_reg) begin
+                    data_b <= do_out_reg[15:4];
                     fsm_state <= FSM_START_1;
                     mux_ctrl <= 1'b0;
                     new_data <= 1'b1;
@@ -185,7 +201,7 @@ inst (
         .ALM(),
         .BUSY(busy_out),
         .CHANNEL(),
-        .DO(do_out[15:0]),
+        .DO(do_out),
         .DRDY(drdy_out),
         .EOC(eoc_out),
         .EOS(),

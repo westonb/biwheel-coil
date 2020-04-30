@@ -34,6 +34,19 @@ module qcw_ocd_control #(
 
 	reg ocd_latched;
 
+	initial begin 
+		qcw_halt = 0;
+		mem_ready_o = 0;
+		mem_rdata_o = 0;
+
+		adc_dout_reg = 0;
+		adc_abs_reg = 0;
+		current_limit = 0;
+		adc_abs_max = 0;
+
+		ocd_latched = 0;
+	end
+
 	assign device_addressed = mem_valid_i && (BASE_ADDR<=mem_addr_i) && ((BASE_ADDR + ADDR_RANGE)>mem_addr_i);
 
 	always @(posedge clk) begin

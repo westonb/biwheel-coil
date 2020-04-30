@@ -12,6 +12,7 @@ set BUILD_TIME [ clock format [ clock seconds ] -format %H%M%S ]
 set PROJ_NM "build"
 set PROJ_DIR "./$PROJ_NM"
 set PART_NM "xc7s25ftgb196-1"
+set XILINX "/opt/Xilinx/Vivado/2018.2"
 
 # synthesis related settings
 set SYNTH_ARGS ""
@@ -46,8 +47,10 @@ create_project -force $PROJ_NM $PROJ_DIR
 
 # read all design files and constraints
 read_verilog [glob ./rtl/*.v]
+#read_verilog -sv {/opt/Xilinx/Vivado/2018.2/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv}
 add_files {src/firmware.hex}
 read_xdc {const/pins.xdc const/clocks.xdc}
+auto_detect_xpm
 
 # Synthesize Design
 eval "synth_design $DEFINES $SYNTH_ARGS -top $TOP_MODULE -part $PART_NM"

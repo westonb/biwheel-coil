@@ -58,7 +58,7 @@ bitstream.bit: src/firmware.hex
 	vivado -mode tcl -nojournal -log build/vivado.log -source build.tcl
 
 src/firmware.elf: src/sections.lds src/start.s src/firmware.c
-	riscv32-unknown-elf-gcc -march=rv32i -Wl,-Bstatic,-T,src/sections.lds,--strip-debug -ffreestanding -nostdlib -o src/firmware.elf src/start.s src/firmware.c
+	riscv32-unknown-elf-gcc -march=rv32i -Wl,-Bstatic,-T,src/sections.lds,--strip-debug -ffreestanding -nostdlib -o src/firmware.elf src/start.s src/firmware.c src/peripherals.h
 
 src/firmware.bin: src/firmware.elf
 	riscv32-unknown-elf-objcopy -O binary src/firmware.elf src/firmware.bin
