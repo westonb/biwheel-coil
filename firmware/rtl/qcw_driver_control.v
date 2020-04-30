@@ -48,7 +48,7 @@ module qcw_driver_control #(
 
 				(BASE_ADDR+DRIVER_RUN_REG_OFFSET): begin
 					mem_rdata_o <= {31'b0, qcw_ready};
-					if (|mem_wstrb_i) qcw_start <= 1'b1;
+					if (|mem_wstrb_i) qcw_start <= mem_wdata_i[0];
 				end
 
 				(BASE_ADDR+DRIVER_CYCLE_LIMIT_REG_OFFSET): begin 
@@ -60,7 +60,7 @@ module qcw_driver_control #(
 
 				(BASE_ADDR+DRIVER_HALT_REG_OFFSET): begin 
 					mem_rdata_o <= 32'b0;
-					qcw_halt <= 1'b1;
+					if (|mem_wstrb_i) qcw_halt <= mem_wdata_i[0];
 				end
 				
 				default: begin 

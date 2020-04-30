@@ -318,7 +318,7 @@ module controller_top(
 
 		.il_adc(ADC_DATA), 
 		.vin_adc(vin_adc), 
-		.vout_adc(vout_adc), 
+		.vout_adc(vout_adc), //vout_adc
 		.sw_out(GATE_BOOST), 
 		.boost_running()
 	);

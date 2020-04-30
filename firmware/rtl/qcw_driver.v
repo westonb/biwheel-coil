@@ -84,9 +84,21 @@ module qcw_driver #(
 	//phase comparator wires
 	wire phase_signal_ref;
 
-	assign phase_signal_ref = phase_lead_shiftreg[PHASE_LEAD];
 
 	wire osc_fault;
+
+	initial begin 
+
+		phase_lead_shiftreg = 0;
+		fsm_state = FSM_IDLE;
+		zcs_filter = 0;
+		zcs_state = 0;
+		osc_load = 0;
+		osc_en = 0;
+
+	end
+
+	assign phase_signal_ref = phase_lead_shiftreg[PHASE_LEAD];
 
 	assign osc_fault = (osc_sw1 && osc_sw2) | (osc_sw3 && osc_sw4);
 	assign sw1_drive = osc_fault ? 0 : osc_sw1;
@@ -102,14 +114,6 @@ module qcw_driver #(
 	assign output_state_debug = phase_signal_ref;
 	assign zcs_state_debug = zcs_state;
 
-	initial begin 
-
-		phase_lead_shiftreg = 0;
-		fsm_state = FSM_IDLE;
-		zcs_filter = 0;
-		zcs_state = 0;
-
-	end
 
 	always@(posedge clk) begin
 		//filter zcs input signal

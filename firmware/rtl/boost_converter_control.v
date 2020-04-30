@@ -93,6 +93,8 @@ module boost_converter_control#(
 
 	assign current_compare = (current_null>>10) + I_LIMIT; 
 
+	assign device_addressed = mem_valid_i && (BASE_ADDR<=mem_addr_i) && ((BASE_ADDR + ADDR_RANGE)>mem_addr_i);
+
 	always@(posedge clk) begin
 
 		sw_out <= sw_ctrl;
@@ -170,6 +172,7 @@ module boost_converter_control#(
 				if (counter[23:2] >= (1<<10)) begin
 					counter <= 0;
 					fsm_state <= FSM_IDLE;
+					boost_init_finished <= 1'b1;
 				end 
 			end
 

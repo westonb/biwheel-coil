@@ -5,7 +5,7 @@ module controller_top_tb;
 	//reg DEBUG_RX;
 	wire DEBUG_RX;
 	reg FIBER_RX;
-	reg ZCS;
+	wire ZCS;
 	reg VP_0;
 	reg VN_0;
 	reg OVER_TEMP;
@@ -25,23 +25,26 @@ module controller_top_tb;
 
 	wire clk;
 
+	reg [1023:0] delay_reg;
+
 	assign clk = ADC_DCO;
 	
+	assign ZCS = ~delay_reg[300];
 
 
 	always #10 ADC_DCO = ~ ADC_DCO;
 
 	initial begin
-		ADC_DATA = 512 + 300;
+		ADC_DATA = 512 + 100;
 		ADC_DCO = 0;
 		//DEBUG_RX = 1;
 		FIBER_RX = 1;
-		ZCS = 0;
 		VP_0 = 0;
 		VN_0 = 0;
 		OVER_TEMP = 0;
 		#10000;
-		ADC_DATA = 512 + 450;
+		ADC_DATA = 512 + 150;
+		delay_reg = 0; 
 	end
 
 	controller_top uut (
@@ -70,6 +73,10 @@ module controller_top_tb;
 		.FIBER_RX(FIBER_RX),
 		.ZCS     (ZCS)
 		);
+
+	always@(posedge ADC_DCO) begin
+		delay_reg <= {delay_reg[1022:0], GATE1};
+	end
 
 	reg [7:0] buffer;
 	localparam ser_half_period = 53;

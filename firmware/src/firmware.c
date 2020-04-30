@@ -17,6 +17,9 @@ firmware for PowerSoC V0.1
 #define GPIO_LED1 0x04
 #define GPIO_LED2 0x08 
 
+#define OCD_LIMIT 300
+#define BUS_VOLTAGE_TARGET 440 //Vout is 0.112V/bit
+
 
 
 volatile uint32_t recv_val; 
@@ -49,20 +52,66 @@ void delay_ms(uint32_t ms){
 	}
 }
 
+void flush_fifo(){
+	while(0x01 & reg_qcw_ramp_status){
+		reg_qcw_ramp_fifo_read = 0;
+	}
+}
+
+void init_boost_converter(){
+	uint32_t old_gpio;
+	old_gpio = reg_gpio_out;
+
+	//enable boost converter ADC MUX 
+	reg_gpio_out = old_gpio & (~GPIO_ADC_MUX);
+
+	reg_boost_init = 1;
+
+	while(0x01 & (~reg_boost_status)){
+		asm ("nop");
+	}
+
+	reg_gpio_out = old_gpio;
+
+	reg_boost_vout_set = BUS_VOLTAGE_TARGET;
+}
+
 
 void main()
 {	
 	//init uart at 38400 baud rate
 	//reg_uart_clkdiv = 2084;
 	reg_uart_clkdiv = 104;
+	reg_gpio_out = GPIO_LED2 | GPIO_ADC_MUX;
+
+	init_boost_converter();
+	reg_boost_enable = 1;
+
+
+
+
+	/*
+	reg_gpio_out = GPIO_ADC_MUX; //connect ADC to OCD
+
+	reg_qcw_ocd_limit = OCD_LIMIT;
+
+	reg_qcw_driver_cycle_limit = 100; 
+
+	for (int i=0; i < 150; i++ ){
+		reg_qcw_ramp_fifo_write = i + 100;
+	}
+
+
+
+
+	*/
+
 
 	while (1)
 	{	
-		print("Hello World \n");
 
-		delay_ms(200);
-		reg_gpio_out = GPIO_LED1;
-		delay_ms(400); 
-		reg_gpio_out = GPIO_LED2;
+		print("Running\n");
+		
+		
 	}
 }
