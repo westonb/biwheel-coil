@@ -27,6 +27,7 @@
 #define QCW_OCD_MEAS_OFFSET 4
 #define QCW_OCD_STATUS_OFFSET 8
 #define QCW_OCD_ADC_OFFSET 12
+#define QCW_OCD_RESET_OFFSET 16
 
 #define BOOST_ENABLE_OFFSET 0
 #define BOOST_INIT_OFFSET 4
@@ -55,6 +56,7 @@
 #define reg_qcw_ocd_meas (*(volatile uint32_t*)(QCW_OCD_BASE_ADDR+QCW_OCD_MEAS_OFFSET))
 #define reg_qcw_ocd_status (*(volatile uint32_t*)(QCW_OCD_BASE_ADDR+QCW_OCD_STATUS_OFFSET))
 #define reg_qcw_ocd_adc (*(volatile uint32_t*)(QCW_OCD_BASE_ADDR+QCW_OCD_ADC_OFFSET))
+#define reg_qcw_ocd_reset (*(volatile uint32_t*)(QCW_OCD_BASE_ADDR+QCW_OCD_RESET_OFFSET))
 
 #define reg_boost_enable (*(volatile uint32_t*)(BOOST_BASE_ADDR+BOOST_ENABLE_OFFSET))
 #define reg_boost_init (*(volatile uint32_t*)(BOOST_BASE_ADDR+BOOST_INIT_OFFSET))

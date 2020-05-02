@@ -324,8 +324,9 @@ module controller_top(
 	);
 
 	qcw_driver #(
-		.STARTING_PERIOD(600),
-		.PHASE_LEAD     (80)
+		.STARTING_PERIOD(630),
+		.PHASE_LEAD     (65),
+		.DEADTIME		(20)
 		) driver (
 		.clk           (clk_240MHz),
 		.zcs           (~ZCS),

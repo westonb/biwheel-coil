@@ -124,7 +124,7 @@ module boost_converter_control#(
 					mem_rdata_o <= {31'b0, boost_init};
 				end
 				(BASE_ADDR+BOOST_STATUS_REG_OFFSET): begin
-					mem_rdata_o <= {30'b0, boost_running, boost_init_finished};
+					mem_rdata_o <= {30'b0, vout_good, boost_init_finished};
 				end
 				(BASE_ADDR+BOOST_VIN_REG_OFFSET): begin
 					mem_rdata_o <= {20'b0, vin_adc_reg};

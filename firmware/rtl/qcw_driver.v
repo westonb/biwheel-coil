@@ -1,7 +1,8 @@
 `timescale 1ns/1ps
 module qcw_driver #(
 	parameter STARTING_PERIOD = 600,
-	parameter PHASE_LEAD = 20
+	parameter PHASE_LEAD = 20,
+	parameter DEADTIME = 24
 	)(
 	input wire clk, 
 	input wire zcs,
@@ -25,8 +26,7 @@ module qcw_driver #(
 	);	
 
 
-	localparam K_GAIN = 8;
-	localparam DEADTIME = 12;
+	localparam K_GAIN = 1;
 	localparam STARTING_PHASE_SHIFT = 100;
 
 	localparam PHASE_MIN = 50;
