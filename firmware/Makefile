@@ -7,6 +7,12 @@ export COCOTB
 
 VIVADO_BASE = /tools/Xilinx/Vivado/2018.3
 
+CFLAGS=--specs=picolibc.specs -Wall --verbose
+
+CC_RISCV=riscv64-unknown-elf-gcc
+CFLAGS_RISCV=$(CFLAGS) -march=rv32i -mabi=ilp32 -Tsrc/powerSOC.ld
+
+
 
 clean:
 	rm -rf build/*
@@ -57,14 +63,16 @@ pll_full_simulate:
 bitstream.bit: src/firmware.hex
 	vivado -mode tcl -nojournal -log build/vivado.log -source build.tcl
 
-src/firmware.elf: src/sections.lds src/start.s src/firmware.c
-	riscv32-unknown-elf-gcc -march=rv32i -Wl,-Bstatic,-T,src/sections.lds,--strip-debug -ffreestanding -nostdlib -o src/firmware.elf src/start.s src/firmware.c src/peripherals.h
+#src/firmware.elf: src/sections.lds src/start.s src/firmware.c
+#	riscv32-unknown-elf-gcc -march=rv32i -Wl,-Bstatic,-T,src/sections.lds,--strip-debug -ffreestanding -nostdlib -o src/firmware.elf src/start.s src/firmware.c src/peripherals.h
+src/firmware.elf: src/firmware.c
+	$(CC_RISCV) $(CFLAGS_RISCV) -o $@ $^
 
 src/firmware.bin: src/firmware.elf
-	riscv32-unknown-elf-objcopy -O binary src/firmware.elf src/firmware.bin
+	riscv64-unknown-elf-objcopy -O binary src/firmware.elf src/firmware.bin
 
 src/firmware.hex: src/firmware.bin
-	python3 makehex.py src/firmware.bin 4096 > src/firmware.hex
+	python3 makehex.py src/firmware.bin 8192 > src/firmware.hex
 
 
 

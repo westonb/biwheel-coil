@@ -158,7 +158,7 @@ module controller_top(
 
 	simple_mem #(
 		.BASE_ADDR(32'h00100000),
-		.LOG_SIZE (12),
+		.LOG_SIZE (13),
 		.MEMFILE  ("src/firmware.hex")
 	) rom (
 		.clk        (clk_80MHz),
@@ -172,7 +172,7 @@ module controller_top(
 
 	simple_mem #(
 		.BASE_ADDR(32'h00000000),
-		.LOG_SIZE (10),
+		.LOG_SIZE (12),
 		.MEMFILE  ("")
 	) ram (
 		.clk        (clk_80MHz),

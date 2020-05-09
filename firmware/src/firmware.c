@@ -1,6 +1,9 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "peripherals.h"
 
@@ -17,78 +20,52 @@ firmware for PowerSoC V0.1
 #define GPIO_LED1 0x04
 #define GPIO_LED2 0x08 
 
-#define OCD_LIMIT 420
+#define OCD_LIMIT 330
 #define BUS_VOLTAGE_TARGET 240 //Vout is 0.112V/bit
 
 #define PRECHARGE_DELAY 10000
 
 #define PHASE_START 100 //phase shit, 0 to 255 
 #define PHASE_MAX 254 
-#define CYCLE_LIMIT 2500
+#define CYCLE_LIMIT 4000
 
 #define PHASE_DELTA (((PHASE_MAX-PHASE_START)<<16)/CYCLE_LIMIT)
+
+#define RX_BUFFER_SIZE 64
 
 
 
 volatile uint32_t recv_val; 
 volatile uint32_t foo;
 
-char buffer [128];
+char rx_buffer [RX_BUFFER_SIZE];
 
-void putchar(char c)
-{	if (c == '\n')
-		putchar('\r');
-	reg_uart_data = c;
-}
 
-void print(const char *p)
+static int
+simple_putc(char c, FILE *file)
 {
-	while (*p)
-		putchar(*(p++));
+	(void) file;	
+	reg_uart_data = c;	
+	return c;
 }
 
-void print_dec(uint32_t v)
-{
-	if (v >= 2000) {
-		print(">=2000");
-		return;
-	}
-
-	if 		(v >= 1000){ putchar('1'); v -= 1000; }
-
-	if      (v >= 900) { putchar('9'); v -= 900; }
-	else if (v >= 800) { putchar('8'); v -= 800; }
-	else if (v >= 700) { putchar('7'); v -= 700; }
-	else if (v >= 600) { putchar('6'); v -= 600; }
-	else if (v >= 500) { putchar('5'); v -= 500; }
-	else if (v >= 400) { putchar('4'); v -= 400; }
-	else if (v >= 300) { putchar('3'); v -= 300; }
-	else if (v >= 200) { putchar('2'); v -= 200; }
-	else if (v >= 100) { putchar('1'); v -= 100; }
-	else putchar('0');
-
-	if      (v >= 90) { putchar('9'); v -= 90; }
-	else if (v >= 80) { putchar('8'); v -= 80; }
-	else if (v >= 70) { putchar('7'); v -= 70; }
-	else if (v >= 60) { putchar('6'); v -= 60; }
-	else if (v >= 50) { putchar('5'); v -= 50; }
-	else if (v >= 40) { putchar('4'); v -= 40; }
-	else if (v >= 30) { putchar('3'); v -= 30; }
-	else if (v >= 20) { putchar('2'); v -= 20; }
-	else if (v >= 10) { putchar('1'); v -= 10; }
-	else putchar('0');
-
-	if      (v >= 9) { putchar('9'); v -= 9; }
-	else if (v >= 8) { putchar('8'); v -= 8; }
-	else if (v >= 7) { putchar('7'); v -= 7; }
-	else if (v >= 6) { putchar('6'); v -= 6; }
-	else if (v >= 5) { putchar('5'); v -= 5; }
-	else if (v >= 4) { putchar('4'); v -= 4; }
-	else if (v >= 3) { putchar('3'); v -= 3; }
-	else if (v >= 2) { putchar('2'); v -= 2; }
-	else if (v >= 1) { putchar('1'); v -= 1; }
-	else putchar('0');
+static int
+simple_getc(FILE *file)
+{	
+	int32_t c = -1;
+	while (c == -1){ c = reg_uart_data;}
+	(void) file;		/* Not used in this function */
+	return c;
 }
+
+
+static FILE __stdio = FDEV_SETUP_STREAM(simple_putc,
+					simple_getc,
+					NULL,
+					_FDEV_SETUP_RW);
+
+FILE *const __iob[3] = { &__stdio, &__stdio, &__stdio };
+
 
 void delay_ms(uint32_t ms){
 
@@ -137,7 +114,7 @@ void init_boost_converter(){
 
 void init_system(){
 
-	print("QCW Coil Driver V0.1\n Booting...\n");
+	printf("QCW Coil Driver V0.1\r\n Booting...\r\n");
 
 	init_boost_converter();
 
@@ -145,74 +122,110 @@ void init_system(){
 	reg_qcw_ocd_limit = OCD_LIMIT; 
 	reg_boost_vout_set = BUS_VOLTAGE_TARGET;
 
-	print("Precharging DC Bus Capacitor\n");
+	printf("Precharging DC Bus Capacitor\r\n");
 	delay_ms(PRECHARGE_DELAY); 
 	reg_gpio_out = reg_gpio_out | GPIO_GATE_CHARGE;
-	print("Input Voltage: ");
-	print_dec(reg_boost_vin);
-	print("\n\n");
-	print("System Ready\n");
+	printf("Input Voltage: %u \r\n", reg_boost_vin);
+	printf("System Ready\r\n");
 }
 
 void run_pulse(){
-	print("Loading FIFO\n\n");
+	printf("Loading FIFO\r\n");
 	reg_boost_enable = 0;
 	reg_gpio_out = reg_gpio_out | GPIO_ADC_MUX; //connect ADC to current sense
 	reg_qcw_ocd_reset = 1;
 
 	flush_fifo();
 	load_fifo(PHASE_START, PHASE_DELTA, CYCLE_LIMIT);
+
 	reg_qcw_driver_run = 1;
 
 	while (reg_qcw_driver_run == 0) {
 	}
 
-	print("Pulse Finished\n\n");
+	printf("Pulse Finished\n\n");
 	if(reg_qcw_ocd_status){
-		print("OCD Triggered\n\n");
+		printf("OCD Triggered\n\n");
 	}
 
-	print("Max Current: ");
-	print_dec(reg_qcw_ocd_meas);
-	print("\n\n");
+	printf("Max Current: %u \r\n", reg_qcw_ocd_meas);
 
-	print("Number of Cycles: ");
-	print_dec(reg_qcw_ramp_cycle_count);
-	print("\n\n");
+	printf("Number of Cycles: %u \r\n", reg_qcw_ramp_cycle_count);
 }
 
 void charge_bus(){
 	uint32_t i;
-	print("Charging Bus Capacitor\n");
+	printf("Charging Bus Capacitor\r\n");
 	reg_gpio_out = reg_gpio_out & (~GPIO_ADC_MUX);
 	reg_boost_enable = 1;
 
 	while((reg_boost_status & 0x02) == 0){ //check if vout is not good 
 		i++;
 		if (i>250000) {
-			print("Charging....\n");
+			printf("Charging....\r\n");
 			i=0;
 		}
 	}
 	reg_boost_enable = 0;
 	reg_gpio_out = reg_gpio_out | GPIO_ADC_MUX; //connect ADC to current sense
 
-	print("Charged. Vout: ");
-	print_dec(reg_boost_vout);
-	print("\n\n");
+	printf("Charged. Vout: %u \r\n", reg_boost_vout);
+	
+}
 
+int parse_cmd(char *command){
+
+	char * token;
+	char * token_cmd;
+	int val = 0;
+
+	printf("Input String _%s_ \r\n", command);
+	token = strtok(command, " ");
+	token_cmd = token;
+
+	if (token == NULL) {return -1;} //check if we have a command 
+	printf("Parsed String _%s_ \r\n", token);
+
+	token = strtok(NULL, " ");
+	if (token != NULL) {
+		printf("Parsed Number _%s_ \r\n", token);
+		val = atoi(token);
+		printf("Converter Number _%u_ \r\n",val);
+	}
+
+
+
+	if(strcmp(token_cmd, "IDN?") == 0){
+		printf("QCW V0.2\r\n");
+	}
+	else if (strcmp(token_cmd, "BOOST:VSET")==0){
+		printf("BOOST Set Voltage to %u \r\n", val);
+	}
+	else {
+		printf("Not a valid command\r\n");
+	}
+	return 1;
 }
 
 void main()
 {	
-	uint32_t loop_counter = 0;
-	//init uart at 38400 baud rate
+
+	char * command_pointer = rx_buffer;
+
+	//reg_uart_clkdiv = 104;
 	reg_uart_clkdiv = 2084;
+	uint32_t loop_counter = 0;
+	uint32_t recv_val;
+
+	//init uart at 38400 baud rate
+	//reg_uart_clkdiv = 2084;
 	//reg_uart_clkdiv = 104;
 	reg_gpio_out = GPIO_LED2 | GPIO_ADC_MUX;
 
-	init_system();
+	//init_system();
 
+
+	printf("Booting. Hello World\r\n");
 	
 	
 
@@ -222,22 +235,24 @@ void main()
 		loop_counter++;
 		recv_val = reg_uart_data;
 
-		if(recv_val== 0x63){ // 'c': charge DC bus capacitor
-			recv_val = 0xFFFFFFFF;
-			charge_bus();
-		} 
+		if(recv_val == -1) {} // no data, ignore
 
-		if(recv_val== 0x66){ // 'f': fire pulse
-			recv_val = 0xFFFFFFFF;
-			run_pulse();
-		} 
-
-		delay_ms(10);
-		if (loop_counter>100){
-			print("Running\n");
-			loop_counter = 0;
+		else if(recv_val == '\r'){ //line is done, process command
+			printf("\r\n");
+			*command_pointer = 0; //null terminate
+			parse_cmd(rx_buffer);
+			command_pointer = rx_buffer; 
+		}
+		else if (32<=recv_val<=126){	//valid char, process
+			simple_putc(recv_val, NULL);
+			*command_pointer = recv_val;
+			command_pointer++;
 		}
 
-		
+
+		if ((command_pointer-rx_buffer)>= RX_BUFFER_SIZE){
+			printf("Command Buffer Overflow\r\n");
+			command_pointer = rx_buffer;
+		}
 	}
 }
