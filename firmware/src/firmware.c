@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h> 
 
 #include "peripherals.h"
 
@@ -32,6 +33,9 @@ firmware for PowerSoC V0.1
 #define PHASE_DELTA (((PHASE_MAX-PHASE_START)<<16)/CYCLE_LIMIT)
 
 #define RX_BUFFER_SIZE 64
+
+#define VIN_VOLTS_BIT 
+#define VOUT_VOLTS_BIT 
 
 
 
@@ -201,6 +205,14 @@ int parse_cmd(char *command){
 	else if (strcmp(token_cmd, "BOOST:VSET")==0){
 		printf("BOOST Set Voltage to %u \r\n", val);
 	}
+	else if (strcmp(token_cmd, "BOOST:VIN")==0){
+		printf("Boost Vin: ");
+
+	}
+	else if (strcmp(token_cmd, "BOOST:VOUT")==0){
+		printf("Boost Vout: ");
+	}
+
 	else {
 		printf("Not a valid command\r\n");
 	}
@@ -254,5 +266,9 @@ void main()
 			printf("Command Buffer Overflow\r\n");
 			command_pointer = rx_buffer;
 		}
+
+		delay_ms(100);
+		printf("Multiply Test: %u", loop_counter*loop_counter);
+		printf("Divide Test: %u", loop_counter/3);
 	}
 }

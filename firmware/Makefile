@@ -10,7 +10,7 @@ VIVADO_BASE = /tools/Xilinx/Vivado/2018.3
 CFLAGS=--specs=picolibc.specs -Wall --verbose
 
 CC_RISCV=riscv64-unknown-elf-gcc
-CFLAGS_RISCV=$(CFLAGS) -march=rv32i -mabi=ilp32 -Tsrc/powerSOC.ld
+CFLAGS_RISCV=$(CFLAGS) -march=rv32im -mabi=ilp32 -Tsrc/powerSOC.ld
 
 
 

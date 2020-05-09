@@ -138,10 +138,33 @@ module controller_top(
 
 
 	picorv32 #(
-		.ENABLE_MUL(0),
-		.ENABLE_IRQ(0),
-		.PROGADDR_RESET(32'h00100000), //start of ROM
-		.STACKADDR(32'h001000) //end of RAM
+
+		.ENABLE_COUNTERS     (1),
+		.ENABLE_COUNTERS64   (1),
+		.ENABLE_REGS_16_31   (1),
+		.ENABLE_REGS_DUALPORT(1),
+		.TWO_STAGE_SHIFT     (1),
+		.BARREL_SHIFTER      (0),
+		.TWO_CYCLE_COMPARE   (0),
+		.TWO_CYCLE_ALU       (0),
+		.COMPRESSED_ISA      (0),
+		.CATCH_MISALIGN      (1),
+		.CATCH_ILLINSN       (1),
+		.ENABLE_PCPI         (0),
+		.ENABLE_MUL          (0),
+		.ENABLE_FAST_MUL     (1),
+		.ENABLE_DIV          (1),
+		.ENABLE_IRQ          (0),
+		.ENABLE_IRQ_QREGS    (0),
+		.ENABLE_IRQ_TIMER    (0),
+		.ENABLE_TRACE        (0),
+		.REGS_INIT_ZERO      (0),
+		.MASKED_IRQ          (32'b0),
+		.LATCHED_IRQ         (32'hffff_ffff),
+		.PROGADDR_RESET      (32'h0010_0000),
+		.PROGADDR_IRQ        (32'h0000_0010),
+		.STACKADDR           (32'h0000_4000)
+
 	) picorv32_core (
 		.clk      (clk_80MHz   ),
 		.resetn   (~reset),

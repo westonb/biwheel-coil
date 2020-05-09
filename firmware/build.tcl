@@ -11,11 +11,11 @@ set BUILD_TIME [ clock format [ clock seconds ] -format %H%M%S ]
 # global settings
 set PROJ_NM "build"
 set PROJ_DIR "./$PROJ_NM"
-set PART_NM "xc7s25ftgb196-1"
+set PART_NM "xc7s25ftgb196-2"
 set XILINX "/opt/Xilinx/Vivado/2018.2"
 
 # synthesis related settings
-set SYNTH_ARGS ""
+set SYNTH_ARGS "-retiming"
 #append SYNTH_ARGS " " -flatten_hierarchy " " rebuilt " "
 #append SYNTH_ARGS " " -gated_clock_conversion " " off " "
 #append SYNTH_ARGS " " -bufg " {" 12 "} "
@@ -47,7 +47,6 @@ create_project -force $PROJ_NM $PROJ_DIR
 
 # read all design files and constraints
 read_verilog [glob ./rtl/*.v]
-#read_verilog -sv {/opt/Xilinx/Vivado/2018.2/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv}
 add_files {src/firmware.hex}
 read_xdc {const/pins.xdc const/clocks.xdc}
 auto_detect_xpm
@@ -59,7 +58,8 @@ report_utilization -file $PROJ_DIR/${PROJ_NM}_post_synth_util.rpt
 write_checkpoint -force $PROJ_DIR/${PROJ_NM}_post_synth.dcp
 
 # Opt Design
-opt_design -directive Explore
+#opt_design -directive Explore
+opt_design
 report_timing_summary -file $PROJ_DIR/${PROJ_NM}_post_opt_tim.rpt
 report_utilization -file $PROJ_DIR/${PROJ_NM}_post_opt_util.rpt
 write_checkpoint -force $PROJ_DIR/${PROJ_NM}_post_opt.dcp
@@ -67,22 +67,28 @@ write_checkpoint -force $PROJ_DIR/${PROJ_NM}_post_opt.dcp
 # an error because this is an error post route
 set_property SEVERITY {ERROR} [get_drc_checks DSPS-*]
 # Run DRC on opt design to catch early issues like comb loops
-report_drc -file $PROJ_DIR/${PROJ_NM}_post_opt_drc.rpt
+#report_drc -file $PROJ_DIR/${PROJ_NM}_post_opt_drc.rpt
 
 # Place Design
-place_design 
+#place_design -directive Explore
+place_design
 report_timing_summary -file $PROJ_DIR/${PROJ_NM}_post_place_tim.rpt
 report_utilization -file $PROJ_DIR/${PROJ_NM}_post_place_util.rpt
 write_checkpoint -force $PROJ_DIR/${PROJ_NM}_post_place.dcp
 
+if {[get_property SLACK [get_timing_paths -max_paths 1 -nworst 1 -setup]] < 0} {
+	puts "Found setup timing violations => running physical optimization"
+ 	#phys_opt_design -directive AggressiveExplore
+ 	phys_opt_design
+	report_timing_summary -file $PROJ_DIR/${PROJ_NM}_post_place_physopt_tim.rpt
+	report_utilization -file $PROJ_DIR/${PROJ_NM}_post_place_physopt_util.rpt
+	write_checkpoint -force $PROJ_DIR/${PROJ_NM}_post_place_physopt.dcp
+}
 # Post Place Phys Opt
-phys_opt_design -directive AggressiveExplore
-report_timing_summary -file $PROJ_DIR/${PROJ_NM}_post_place_physopt_tim.rpt
-report_utilization -file $PROJ_DIR/${PROJ_NM}_post_place_physopt_util.rpt
-write_checkpoint -force $PROJ_DIR/${PROJ_NM}_post_place_physopt.dcp
 
 # Route Design
-route_design -directive AggressiveExplore
+#route_design -directive AggressiveExplore
+route_design
 report_timing_summary -file $PROJ_DIR/${PROJ_NM}_post_route_tim.rpt
 report_utilization -hierarchical -file $PROJ_DIR/${PROJ_NM}_post_route_util.rpt
 report_route_status -file $PROJ_DIR/${PROJ_NM}_post_route_status.rpt
