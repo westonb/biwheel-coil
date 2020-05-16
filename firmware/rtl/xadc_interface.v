@@ -9,7 +9,7 @@ module xadc_interface(
 	output reg [11:0] data_b
 );
 
-    localparam BLANK_TIME = 100;
+    localparam BLANK_TIME = 1000;
 
 	localparam FSM_START_1 = 0;
 	localparam FSM_CONVERSION_1 = 1;

@@ -21,8 +21,8 @@ firmware for PowerSoC V0.1
 #define GPIO_LED1 0x04
 #define GPIO_LED2 0x08 
 
-#define OCD_LIMIT 330
-#define BUS_VOLTAGE_TARGET 240 //Vout is 0.112V/bit
+#define OCD_LIMIT 420 //50A limit
+#define BUS_VOLTAGE_TARGET 280 //Vout is 0.112V/bit
 
 #define PRECHARGE_DELAY 10000
 
@@ -34,8 +34,12 @@ firmware for PowerSoC V0.1
 
 #define RX_BUFFER_SIZE 64
 
-#define VIN_VOLTS_BIT 
-#define VOUT_VOLTS_BIT 
+#define VIN_VOLTS_BIT 0.0728
+#define VOUT_VOLTS_BIT 0.145
+#define QCW_AMPS_BIT 0.118
+
+#define VBOOST_OUT_MIN 275 //40V output
+#define VBOOST_OUT_MAX 2068 //300V output 
 
 
 
@@ -118,18 +122,30 @@ void init_boost_converter(){
 
 void init_system(){
 
-	printf("QCW Coil Driver V0.1\r\n Booting...\r\n");
 
-	init_boost_converter();
+	delay_ms(250);
 
 	reg_qcw_driver_cycle_limit = CYCLE_LIMIT;
 	reg_qcw_ocd_limit = OCD_LIMIT; 
 	reg_boost_vout_set = BUS_VOLTAGE_TARGET;
 
+
 	printf("Precharging DC Bus Capacitor\r\n");
-	delay_ms(PRECHARGE_DELAY); 
+	delay_ms(250);
+	while( ((VOUT_VOLTS_BIT*(float)reg_boost_vout)+3) <  (VIN_VOLTS_BIT*(float)reg_boost_vin) ){
+		delay_ms(250);
+		printf("Vin: %.2f \r\n", VIN_VOLTS_BIT*(float)reg_boost_vin);
+		printf("Vbus: %.2f \r\n", VOUT_VOLTS_BIT*(float)reg_boost_vout);
+	}
+
+	printf("Done Charging\r\n");
+	printf("Vin: %.2f \r\n", VIN_VOLTS_BIT*(float)reg_boost_vin);
+	printf("Vbus: %.2f \r\n", VOUT_VOLTS_BIT*(float)reg_boost_vout);
+
 	reg_gpio_out = reg_gpio_out | GPIO_GATE_CHARGE;
-	printf("Input Voltage: %u \r\n", reg_boost_vin);
+	
+	printf("Init Boost Converter\r\n");
+	init_boost_converter();
 	printf("System Ready\r\n");
 }
 
@@ -147,19 +163,18 @@ void run_pulse(){
 	while (reg_qcw_driver_run == 0) {
 	}
 
-	printf("Pulse Finished\n\n");
+	printf("Pulse Finished\r\n");
 	if(reg_qcw_ocd_status){
-		printf("OCD Triggered\n\n");
+		printf("OCD Triggered\r\n");
 	}
 
-	printf("Max Current: %u \r\n", reg_qcw_ocd_meas);
+	printf("Max Current: %.2f \r\n", QCW_AMPS_BIT*(float)reg_qcw_ocd_meas);
 
 	printf("Number of Cycles: %u \r\n", reg_qcw_ramp_cycle_count);
 }
 
 void charge_bus(){
 	uint32_t i;
-	printf("Charging Bus Capacitor\r\n");
 	reg_gpio_out = reg_gpio_out & (~GPIO_ADC_MUX);
 	reg_boost_enable = 1;
 
@@ -181,7 +196,7 @@ int parse_cmd(char *command){
 
 	char * token;
 	char * token_cmd;
-	int val = 0;
+	uint32_t val = 0;
 
 	printf("Input String _%s_ \r\n", command);
 	token = strtok(command, " ");
@@ -203,16 +218,24 @@ int parse_cmd(char *command){
 		printf("QCW V0.2\r\n");
 	}
 	else if (strcmp(token_cmd, "BOOST:VSET")==0){
-		printf("BOOST Set Voltage to %u \r\n", val);
+		if ((val<= VBOOST_OUT_MAX) && (val>=VBOOST_OUT_MIN)){
+			printf("BOOST Set Voltage to %u \r\n", val);
+			reg_boost_vout_set = val;
+		}
 	}
 	else if (strcmp(token_cmd, "BOOST:VIN")==0){
-		printf("Boost Vin: ");
-
+		printf("Boost Vin: %.2f \r\n", VIN_VOLTS_BIT*(float)reg_boost_vin);
 	}
 	else if (strcmp(token_cmd, "BOOST:VOUT")==0){
-		printf("Boost Vout: ");
+		printf("Boost Vout: %.2f \r\n", VOUT_VOLTS_BIT*(float)reg_boost_vout);
 	}
-
+	else if (strcmp(token_cmd, "BOOST:CHARGE")==0){
+		printf("Charging Bus Capacitor\r\n");
+		charge_bus();
+	}
+	else if (strcmp(token_cmd, "QCW:FIRE")==0){
+		run_pulse();
+	}
 	else {
 		printf("Not a valid command\r\n");
 	}
@@ -233,11 +256,13 @@ void main()
 	//reg_uart_clkdiv = 2084;
 	//reg_uart_clkdiv = 104;
 	reg_gpio_out = GPIO_LED2 | GPIO_ADC_MUX;
+	delay_ms(100);
 
-	//init_system();
-
-
+	
 	printf("Booting. Hello World\r\n");
+	init_system();
+
+
 	
 	
 
@@ -255,7 +280,7 @@ void main()
 			parse_cmd(rx_buffer);
 			command_pointer = rx_buffer; 
 		}
-		else if (32<=recv_val<=126){	//valid char, process
+		else if ((32<=recv_val)&&(recv_val<=126)){	//valid char, process
 			simple_putc(recv_val, NULL);
 			*command_pointer = recv_val;
 			command_pointer++;
@@ -267,8 +292,5 @@ void main()
 			command_pointer = rx_buffer;
 		}
 
-		delay_ms(100);
-		printf("Multiply Test: %u", loop_counter*loop_counter);
-		printf("Divide Test: %u", loop_counter/3);
 	}
 }

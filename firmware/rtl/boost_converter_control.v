@@ -5,7 +5,7 @@ module boost_converter_control#(
 	parameter VOUT_HYSTERESIS = 10,
 	parameter OFF_TIME = 2000,
 	parameter ON_TIME_MAX = 20000,
-	parameter BLANK_TIME = 100
+	parameter BLANK_TIME = 300
 )(
 	input clk, 
 	input reset,
@@ -41,6 +41,12 @@ module boost_converter_control#(
 	localparam BOOST_VIN_REG_OFFSET = 12;
 	localparam BOOST_VOUT_REG_OFFSET = 16;
 	localparam BOOST_VOUT_SET_REG_OFFSET= 20;
+
+
+
+	localparam ZCS_VAL = 5; 
+
+
 
 
 	wire device_addressed;
@@ -92,6 +98,7 @@ module boost_converter_control#(
 	end
 
 	assign current_compare = (current_null>>10) + I_LIMIT; 
+	assign zcs_compare = (current_null>>10) + ZCS_VAL;
 
 	assign device_addressed = mem_valid_i && (BASE_ADDR<=mem_addr_i) && ((BASE_ADDR + ADDR_RANGE)>mem_addr_i);
 
@@ -215,12 +222,15 @@ module boost_converter_control#(
 			FSM_RUN_SW_OFF: begin 
 				counter <= 0; 
 				sw_ctrl <= 0;
-				fsm_state <= FSM_RUN_SW_RAMPDOWN;
+				//wait for Il to go below threshold to stop turn on issues 
+				if (il_adc_reg <= current_compare) begin 
+					fsm_state <= FSM_RUN_SW_RAMPDOWN;
+				end
 			end
 
 			FSM_RUN_SW_RAMPDOWN: begin 
 				counter <= counter + 1;
-				if (counter >= OFF_TIME) begin 
+				if ((counter >= OFF_TIME) || (il_adc_reg <= zcs_compare)) begin 
 					fsm_state <= FSM_IDLE;
 				end
 			end

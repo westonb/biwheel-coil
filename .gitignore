@@ -8,8 +8,15 @@ simulation/*.log
 simulation/*.plt
 simulation/*.raw
 simulation/*.net
+modeling/*.log
+modeling/*.plt
+modeling/*.raw
+modeling/*.net
 #matlab backup files
 *.m~
+#femm files
+*.edge
+*.ans
 #osx files
 *.DS_Store
 #for firmware
@@ -22,3 +29,10 @@ firmware/.Xil/
 /firmware/sim/waves.pkl
 /firmware/sim/sim_build/
 /firmware/sim/build/
+#build files
+firmware/bitstream.bin
+firmware/bitstream.bit
+firmware/build/
+firmware/src/firmware.bin
+firmware/src/firmware.elf
+firmware/src/firmware.hex
