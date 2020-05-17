@@ -21,7 +21,7 @@ firmware for PowerSoC V0.1
 #define GPIO_LED1 0x04
 #define GPIO_LED2 0x08 
 
-#define OCD_LIMIT 420 //50A limit
+#define OCD_LIMIT 336 //75A limit
 #define BUS_VOLTAGE_TARGET 280 //Vout is 0.112V/bit
 
 #define PRECHARGE_DELAY 10000
@@ -36,10 +36,10 @@ firmware for PowerSoC V0.1
 
 #define VIN_VOLTS_BIT 0.0728
 #define VOUT_VOLTS_BIT 0.145
-#define QCW_AMPS_BIT 0.118
+#define QCW_AMPS_BIT 0.223
 
 #define VBOOST_OUT_MIN 275 //40V output
-#define VBOOST_OUT_MAX 2068 //300V output 
+#define VBOOST_OUT_MAX 3102 //450V output 
 
 
 
@@ -145,6 +145,7 @@ void init_system(){
 	reg_gpio_out = reg_gpio_out | GPIO_GATE_CHARGE;
 	
 	printf("Init Boost Converter\r\n");
+	delay_ms(250);
 	init_boost_converter();
 	printf("System Ready\r\n");
 }
@@ -182,13 +183,15 @@ void charge_bus(){
 		i++;
 		if (i>250000) {
 			printf("Charging....\r\n");
+			printf("Boost Vin: %.2f \r\n", VIN_VOLTS_BIT*(float)reg_boost_vin);
+			printf("Boost Vout: %.2f \r\n", VOUT_VOLTS_BIT*(float)reg_boost_vout);
 			i=0;
 		}
 	}
 	reg_boost_enable = 0;
 	reg_gpio_out = reg_gpio_out | GPIO_ADC_MUX; //connect ADC to current sense
 
-	printf("Charged. Vout: %u \r\n", reg_boost_vout);
+	printf("Charged. Vout: %.2f \r\n", VOUT_VOLTS_BIT*(float)reg_boost_vout);
 	
 }
 
@@ -215,11 +218,14 @@ int parse_cmd(char *command){
 
 
 	if(strcmp(token_cmd, "IDN?") == 0){
-		printf("QCW V0.2\r\n");
+		printf("QCW V0.3\r\n");
 	}
 	else if (strcmp(token_cmd, "BOOST:VSET")==0){
+
+		val = (uint32_t) ( ((float)val) / VOUT_VOLTS_BIT);
 		if ((val<= VBOOST_OUT_MAX) && (val>=VBOOST_OUT_MIN)){
-			printf("BOOST Set Voltage to %u \r\n", val);
+			printf("BOOST Set Voltage to %u bits \r\n", val);
+			printf("BOOST Set Voltage to %.2f volts \r\n", VOUT_VOLTS_BIT*(float)val);
 			reg_boost_vout_set = val;
 		}
 	}
@@ -236,6 +242,21 @@ int parse_cmd(char *command){
 	else if (strcmp(token_cmd, "QCW:FIRE")==0){
 		run_pulse();
 	}
+	else if (strcmp(token_cmd, "QCW:BURST")==0){
+		charge_bus();
+		run_pulse();
+		delay_ms(500);
+		charge_bus();
+		run_pulse();
+		delay_ms(500);
+		charge_bus();
+		run_pulse();
+		delay_ms(500);
+		charge_bus();
+		run_pulse();
+
+	}
+
 	else {
 		printf("Not a valid command\r\n");
 	}
@@ -260,6 +281,7 @@ void main()
 
 	
 	printf("Booting. Hello World\r\n");
+	printf("QCW V0.3\r\n");
 	init_system();
 
 

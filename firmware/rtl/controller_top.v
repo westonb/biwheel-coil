@@ -51,6 +51,7 @@ module controller_top(
 
 	//connecting wires 
 	wire [11:0] vin_adc, vout_adc;
+	wire xadc_valid;
 
 	reg [31:0] counter = 0;
 
@@ -342,13 +343,14 @@ module controller_top(
 		.il_adc(ADC_DATA), 
 		.vin_adc(vin_adc), 
 		.vout_adc(vout_adc), //vout_adc
+		.xadc_valid   (xadc_valid),
 		.sw_out(GATE_BOOST), 
 		.boost_running()
 	);
 
 	qcw_driver #(
 		.STARTING_PERIOD(600),
-		.PHASE_LEAD     (60),
+		.PHASE_LEAD     (50),
 		.DEADTIME		(18)
 		) driver (
 		.clk           (clk_240MHz),
@@ -375,7 +377,8 @@ module controller_top(
 		.mux_ctrl(XADC_MUX),
 		.new_data(),
 		.data_a  (vin_adc),
-		.data_b  (vout_adc)
+		.data_b  (vout_adc),
+		.valid_data(xadc_valid)
 	);
 
 	system_clocking system_clocks (

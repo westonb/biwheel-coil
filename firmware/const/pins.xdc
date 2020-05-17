@@ -1,5 +1,6 @@
 set_property CFGBVS VCCO [current_design]
 set_property CONFIG_VOLTAGE 3.3 [current_design]
+set_property BITSTREAM.GENERAL.JTAG_XADC Disable [current_design]
 
 #ADC data bus
 set_property PACKAGE_PIN D13 [get_ports ADC_DATA[0]]

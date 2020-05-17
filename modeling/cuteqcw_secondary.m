@@ -78,26 +78,26 @@ topload_minor = 65/2;
 
 
 
-mi_drawline(0, topload_height- topload_thickness , topload_major - topload_minor, topload_height- topload_thickness);
-mi_drawline(0, topload_height + topload_thickness , topload_major - topload_minor, topload_height + topload_thickness);
-mi_addsegment(0, topload_height- topload_thickness, 0, topload_height + topload_thickness);
-mi_addnode(topload_major + topload_minor, topload_height);
-mi_addarc(topload_major - topload_minor, topload_height- topload_thickness, topload_major + topload_minor, topload_height, 180, 10);
-mi_addarc(topload_major + topload_minor, topload_height,  topload_major - topload_minor, topload_height + topload_thickness, 180, 10);
+%mi_drawline(0, topload_height- topload_thickness , topload_major - topload_minor, topload_height- topload_thickness);
+%mi_drawline(0, topload_height + topload_thickness , topload_major - topload_minor, topload_height + topload_thickness);
+%mi_addsegment(0, topload_height- topload_thickness, 0, topload_height + topload_thickness);
+%mi_addnode(topload_major + topload_minor, topload_height);
+%mi_addarc(topload_major - topload_minor, topload_height- topload_thickness, topload_major + topload_minor, topload_height, 180, 10);
+%mi_addarc(topload_major + topload_minor, topload_height,  topload_major - topload_minor, topload_height + topload_thickness, 180, 10);
 
-mi_drawarc(topload_minor + topload_major - topload_thickness, topload_height, topload_major - topload_minor + topload_thickness, topload_height, 180, 10);
+%mi_drawarc(topload_minor + topload_major - topload_thickness, topload_height, topload_major - topload_minor + topload_thickness, topload_height, 180, 10);
 
-mi_addarc(topload_major - topload_minor + topload_thickness, topload_height,  topload_major + topload_minor- topload_thickness, topload_height, 180, 10);
+%mi_addarc(topload_major - topload_minor + topload_thickness, topload_height,  topload_major + topload_minor- topload_thickness, topload_height, 180, 10);
 
-mi_addblocklabel(5, topload_height);
-mi_selectlabel(5, topload_height);
-mi_setblockprop("Al", 1, 0, '<None>', 0, 0, 0);
-mi_clearselected;
+%mi_addblocklabel(5, topload_height);
+%mi_selectlabel(5, topload_height);
+%mi_setblockprop("Al", 1, 0, '<None>', 0, 0, 0);
+%mi_clearselected;
 
-mi_addblocklabel(topload_major, topload_height);
-mi_selectlabel(topload_major, topload_height);
-mi_setblockprop('Air', 1, 0, '<None>', 0, 0, 0);
-mi_clearselected;
+%mi_addblocklabel(topload_major, topload_height);
+%mi_selectlabel(topload_major, topload_height);
+%mi_setblockprop('Air', 1, 0, '<None>', 0, 0, 0);
+%mi_clearselected;
 
 
 

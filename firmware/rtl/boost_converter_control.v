@@ -1,10 +1,10 @@
 `timescale 1ns/1ps
 module boost_converter_control#(
 	parameter BASE_ADDR = 32'h00000000,
-	parameter I_LIMIT = 40,
+	parameter I_LIMIT = 60,
 	parameter VOUT_HYSTERESIS = 10,
 	parameter OFF_TIME = 2000,
-	parameter ON_TIME_MAX = 20000,
+	parameter ON_TIME_MAX = 10000,
 	parameter BLANK_TIME = 300
 )(
 	input clk, 
@@ -20,6 +20,7 @@ module boost_converter_control#(
 	input [9:0] il_adc,
 	input [11:0] vin_adc,
 	input [11:0] vout_adc,
+	input xadc_valid,
 
 	output reg sw_out,
 	output reg boost_running
@@ -44,7 +45,7 @@ module boost_converter_control#(
 
 
 
-	localparam ZCS_VAL = 5; 
+	localparam ZCS_VAL = 1; 
 
 
 
@@ -66,6 +67,7 @@ module boost_converter_control#(
 	reg [11:0] vout_target;
 
 	wire [9:0] current_compare;
+	wire [9:0] zcs_compare;
 
 	reg [3:0] fsm_state;
 	reg [23:0] counter;
@@ -131,7 +133,7 @@ module boost_converter_control#(
 					mem_rdata_o <= {31'b0, boost_init};
 				end
 				(BASE_ADDR+BOOST_STATUS_REG_OFFSET): begin
-					mem_rdata_o <= {30'b0, vout_good, boost_init_finished};
+					mem_rdata_o <= {29'b0, xadc_valid, vout_good, boost_init_finished};
 				end
 				(BASE_ADDR+BOOST_VIN_REG_OFFSET): begin
 					mem_rdata_o <= {20'b0, vin_adc_reg};
@@ -185,7 +187,7 @@ module boost_converter_control#(
 
 			//power states 
 			FSM_IDLE: begin 
-				if (boost_enable) begin
+				if (boost_enable && xadc_valid) begin
 					if (!vout_good) begin
 						fsm_state <= FSM_RUN_SW_ON;
 					end
@@ -215,6 +217,9 @@ module boost_converter_control#(
 					fsm_state <= FSM_RUN_SW_OFF;
 				end
 				if (counter > ON_TIME_MAX) begin 
+					fsm_state <= FSM_RUN_SW_OFF;
+				end
+				if (!boost_enable) begin 
 					fsm_state <= FSM_RUN_SW_OFF;
 				end
 			end

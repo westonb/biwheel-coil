@@ -6,10 +6,12 @@ module xadc_interface(
 	output reg mux_ctrl, 
 	output reg new_data,
 	output reg [11:0] data_a,
-	output reg [11:0] data_b
+	output reg [11:0] data_b,
+    output reg valid_data
 );
 
     localparam BLANK_TIME = 1000;
+    localparam MAX_SAMPLE_TIME = 24000;
 
 	localparam FSM_START_1 = 0;
 	localparam FSM_CONVERSION_1 = 1;
@@ -26,6 +28,7 @@ module xadc_interface(
 
 	reg [3:0] fsm_state = FSM_BOOT;
     reg [23:0] timer = 0;
+    reg [23:0] valid_data_timer;
 
 	reg conversion_start = 0;
 	reg den_in = 0;
@@ -52,6 +55,8 @@ module xadc_interface(
         do_out_reg = 0;
         drdy_out_reg = 0;
         eoc_out_reg = 0;
+        valid_data_timer = 0;
+        valid_data = 0;
     end 
 
 	always @(posedge clk) begin
@@ -60,6 +65,22 @@ module xadc_interface(
         do_out_reg <= do_out;
         drdy_out_reg <= drdy_out;
         eoc_out_reg <= eoc_out;
+
+        if (valid_data_timer < MAX_SAMPLE_TIME) begin 
+            valid_data_timer <= valid_data_timer + 1;
+        end else begin 
+            valid_data <= 1'b0;
+        end
+
+        if (new_data) begin
+            valid_data = 1'b1;
+            valid_data_timer <= 0;
+        end
+
+        if (data_b<275) begin //sanity check to not blow up boost converter
+            valid_data <= 0;
+        end
+
 
 		case (fsm_state)
 
