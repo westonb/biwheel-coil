@@ -27,8 +27,8 @@ firmware for PowerSoC V0.1
 #define PRECHARGE_DELAY 10000
 
 #define PHASE_START 100 //phase shit, 0 to 255 
-#define PHASE_MAX 254 
-#define CYCLE_LIMIT 4000
+#define PHASE_MAX 254
+#define CYCLE_LIMIT 6000
 
 #define PHASE_DELTA (((PHASE_MAX-PHASE_START)<<16)/CYCLE_LIMIT)
 
@@ -36,10 +36,13 @@ firmware for PowerSoC V0.1
 
 #define VIN_VOLTS_BIT 0.0728
 #define VOUT_VOLTS_BIT 0.145
-#define QCW_AMPS_BIT 0.223
+//#define QCW_AMPS_BIT 0.223
+#define QCW_AMPS_BIT 0.25
 
 #define VBOOST_OUT_MIN 275 //40V output
-#define VBOOST_OUT_MAX 3102 //450V output 
+#define VBOOST_OUT_MAX 3640 //525V output 
+
+#define MAX_BURST_LENGTH 8000 //maximum FIFO depth is 8.12k
 
 
 
@@ -218,7 +221,7 @@ int parse_cmd(char *command){
 
 
 	if(strcmp(token_cmd, "IDN?") == 0){
-		printf("QCW V0.3\r\n");
+		printf("QCW V0.4\r\n");
 	}
 	else if (strcmp(token_cmd, "BOOST:VSET")==0){
 
@@ -281,7 +284,7 @@ void main()
 
 	
 	printf("Booting. Hello World\r\n");
-	printf("QCW V0.3\r\n");
+	printf("QCW V0.4\r\n");
 	init_system();
 
 

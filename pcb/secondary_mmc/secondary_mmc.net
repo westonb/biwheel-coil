@@ -1,0 +1,44 @@
+(export (version D)
+  (design
+    (source /home/wbraun/Projects/biwheel-coil/pcb/secondary_mmc/secondary_mmc.sch)
+    (date "Fri 05 Jun 2020 01:17:34 PM PDT")
+    (tool "Eeschema 5.0.2-bee76a0~70~ubuntu18.04.1")
+    (sheet (number 1) (name /) (tstamps /)
+      (title_block
+        (title)
+        (company)
+        (rev)
+        (date)
+        (source secondary_mmc.sch)
+        (comment (number 1) (value ""))
+        (comment (number 2) (value ""))
+        (comment (number 3) (value ""))
+        (comment (number 4) (value "")))))
+  (components
+    (comp (ref C1001)
+      (value C)
+      (footprint Capacitor_SMD:C_1812_4532Metric)
+      (datasheet ~)
+      (libsource (lib Device) (part C) (description "Unpolarized capacitor"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 5EDAA863)))
+  (libparts
+    (libpart (lib Device) (part C)
+      (description "Unpolarized capacitor")
+      (docs ~)
+      (footprints
+        (fp C_*))
+      (fields
+        (field (name Reference) C)
+        (field (name Value) C))
+      (pins
+        (pin (num 1) (name ~) (type passive))
+        (pin (num 2) (name ~) (type passive)))))
+  (libraries
+    (library (logical Device)
+      (uri /usr/share/kicad/library/Device.lib)))
+  (nets
+    (net (code 1) (name /+)
+      (node (ref C1001) (pin 1)))
+    (net (code 2) (name /-)
+      (node (ref C1001) (pin 2)))))
